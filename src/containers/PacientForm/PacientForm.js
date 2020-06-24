@@ -4,7 +4,7 @@ import Container from '@material-ui/core/Container';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import {CssBaseline, Grid } from '@material-ui/core/';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import * as actions from '../../store/actions/index';
@@ -17,15 +17,19 @@ import ExaminationArea from '../../components/ExaminationArea/ExaminationArea'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-      marginTop: theme.spacing(2),
+      marginTop: theme.spacing(4),
+      marginBottom: theme.spacing(4),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       width: '100%',
+      background: '#ffff',
+      borderRadius: "0.5rem"
     },
     avatar: {
       margin: theme.spacing(1),
-      backgroundColor: theme.palette.secondary.main,
+      backgroundColor: '#D93250' ,
+      color: '#FFFFFF'
     },
     form: {
       width: '100%', // Fix IE 11 issue.
@@ -149,12 +153,14 @@ const PacientForm = (props) => {
     }
     const classes = useStyles()
     return (
+      <Grid container>
+      <Grid item sm={12}>
             <Container component="main" className={classes.paper}>
               <CssBaseline />
-                <Avatar className={classes.avatar} >
+                <Avatar variant='rounded' className={classes.avatar} >
                     <PersonAddIcon />
                 </Avatar>
-                <h2>Historia Medica</h2>
+                <h2>Historia Médica</h2>
                 <form onSubmit={handleSubmit}>
                     <NamesInputArea
                       first_name={names.first_name}
@@ -215,6 +221,8 @@ const PacientForm = (props) => {
                     </Button>
                 </form>
             </Container>
+            </Grid>
+            </Grid>
         )
 
 }

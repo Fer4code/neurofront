@@ -4,6 +4,7 @@ import Carousel from 'react-bootstrap/Carousel'
 import car1 from '../../img/car1.jpg'
 import car2 from '../../img/car2.jpg'
 import car3 from '../../img/car3.jpg'
+import { Grid } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   carousel: {
@@ -11,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
   carimg:{
     width: '100%',
-    height: '92.3vh'
+    height: '70vh'
   }
 }));
 
@@ -23,8 +24,10 @@ export default function Landing() {
     setIndex(selectedIndex);
   };
 
-  return (
-    <Carousel activeIndex={index} onSelect={handleSelect} className={classes.carousel}>
+  return ( 
+    <Grid container>
+      <Grid item sm={12}>
+      <Carousel activeIndex={index} onSelect={handleSelect} className={classes.carousel}>
       <Carousel.Item>
         <img
           className={classes.carimg}
@@ -63,5 +66,11 @@ export default function Landing() {
         </Carousel.Caption>
       </Carousel.Item>
     </Carousel>
+      </Grid>
+      <Grid item xs={12}>
+        
+      </Grid>
+    </Grid>
+    
   );
 }

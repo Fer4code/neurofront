@@ -4,7 +4,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
     subtitle: {
       fontSize: 'subtitle',
       color: 'white',
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
         align: 'center',
         justifyContent: 'center',
       },
-  }));
+  });
 
 const NavigationItem = (props) => {
     const classes = useStyles()

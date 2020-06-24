@@ -14,12 +14,6 @@ import authReducer from './store/reducers/auth';
 import userReducer from './store/reducers/user';
 import formDataReducer from './store/reducers/formData';
 
-const theme = createMuiTheme({
-  palette: {
-    primary: { main: '#1976d2' },
-  },
-}, esES);
-
 const composeEnhancers = (process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null) || compose;
 
 const rootReducer = combineReducers({
@@ -37,9 +31,7 @@ const store = createStore(rootReducer, composeEnhancers(
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
-      <ThemeProvider theme={theme}>
       <App />
-      </ThemeProvider>
     </React.StrictMode>
   </Provider>,
   document.getElementById('root')

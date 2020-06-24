@@ -4,22 +4,25 @@ import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
 import Button from '@material-ui/core/Button'
 import { withStyles } from '@material-ui/core/styles';
-import logo from '../../../img/register.svg'
+import logo from '../../../img/MD1.svg'
 import Typography from '@material-ui/core/Typography'
-import Chip from '@material-ui/core/Chip';
+import{ Chip, CssBaseline }from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import Paper from '@material-ui/core/Paper';
 
 import * as actions from '../../../store/actions/index';
 
 const useStyles = theme => ({
   paper: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
+    background: '#ffff',
+    borderRadius: "0.5rem",
   },
   avatar: {
     margin: theme.spacing(1),
@@ -32,6 +35,8 @@ const useStyles = theme => ({
   submit: {
     fontSize: theme.typography.pxToRem(20),
     margin: theme.spacing(4, 0, 2),
+    text: theme.palette.button, 
+    backgroundColor: 'green'
   },
   root: {
     width: '100%',
@@ -41,11 +46,8 @@ const useStyles = theme => ({
     fontWeight: theme.typography.h2,
   },
   img: {
-    width: '25%',
-    heigth:'25%',
-    alignItems: 'center',
     marginTop: theme.spacing(4),
-    marginRight: theme.spacing(8)
+    width: '65%'
   },
   title: {
     alignText: 'center',
@@ -83,15 +85,23 @@ class Register extends Component {
         }
         
         return (
-            <Container maxWidth="lg">
-              
-                
-              <div className={classes.paper}>
-                <form onSubmit={this.onSubmit} style={useStyles.form}>
-                {/*<div id="img">
+              <Container component="main" maxWidth="sm" className={classes.paper}>
+             <CssBaseline />     
+             <Grid
+                  container
+                  spacing={1}
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                  alignContent="center"
+                  wrap="nowrap"
+                  
+                >
                 <img src={logo} className={classes.img} alt="registerlogo"/>
-        </div>*/}
-                <Typography variant="h4" color="initial" align="center" className={classes.title}>Crear una cuenta</Typography>
+                </Grid>
+                <form onSubmit={this.onSubmit} style={useStyles.form}>
+                
+                <Typography variant="h4" color="initial" align="center" className={classes.title}>Crea una cuenta y disfruta de nuestros servicios</Typography>
                     <Grid container spacing={2}>
                         <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                           <Typography variant="subtitle2" color="initial">Nombres:</Typography>
@@ -136,7 +146,7 @@ class Register extends Component {
                                 />
                         </Grid>
                         <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                        <Typography variant="subtitle2" color="initial">Genero</Typography>
+                        <Typography variant="subtitle2" color="initial">Género</Typography>
                         <TextField
                                 id="gen"
                                 value={this.props.last_name}
@@ -156,7 +166,7 @@ class Register extends Component {
                                 />
                         </Grid>
                         <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                        <Typography variant="subtitle2" color="initial">Titulo</Typography>
+                        <Typography variant="subtitle2" color="initial">Título</Typography>
                         <TextField
                                 id="title"
                                 value={this.props.last_name}
@@ -176,7 +186,7 @@ class Register extends Component {
                                 />
                         </Grid>
                         <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                        <Typography variant="subtitle2" color="initial">Area de estudio</Typography>
+                        <Typography variant="subtitle2" color="initial">Área de estudio</Typography>
                         <Autocomplete
                           multiple
                           size='small'
@@ -186,16 +196,16 @@ class Register extends Component {
                           freeSolo
                           renderTags={(value, getTagProps) =>
                             value.map((option, index) => (
-                              <Chip color='secondary' label={option} {...getTagProps({ index })} />
+                              <Chip color='primary' label={option} {...getTagProps({ index })} />
                             ))
                           }        
                           renderInput={(params) => (
-                            <TextField {...params} variant="outlined" placeholder="Area de estudio" />
+                            <TextField {...params} variant="outlined" placeholder="Área de estudio" />
                           )}
                         />
                         </Grid>
                         <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                        <Typography variant="subtitle2" color="initial">Numero del colegio de medico</Typography>
+                        <Typography variant="subtitle2" color="initial">Número del colegio de medico</Typography>
                         <TextField
                                 id="title"
                                 htmlFor="number"
@@ -206,25 +216,6 @@ class Register extends Component {
                                 autoComplete="true"
                                 size="small"
                                 placeholder="Numero de colegio de medico"
-                                />
-                        </Grid>
-                        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                        <Typography variant="subtitle2" color="initial">Usuario</Typography>
-                        <TextField
-                                id="user"
-                                value={this.props.username}
-                                onChange={this.onChange}
-                                type="text"
-                                htmlFor="username"
-                                name="username"
-                                fullWidth
-                                variant="outlined"
-                                required
-                                autoComplete="true"
-                                size="small"
-                                placeholder="Usuario"
-                                error={Boolean(this.props.errors?.username)}
-                                helperText={this.props.errors?.username ? this.props.errors?.username[0] : ""}
                                 />
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -288,12 +279,11 @@ class Register extends Component {
                       variant="contained"
                       className={classes.submit}
                     >
-                      Registrarse
+                      Crear cuenta
                     </Button>
                 </form>
-              </div>
               {authRedirect}
-                </Container>
+            </Container>
         )
     }
 }

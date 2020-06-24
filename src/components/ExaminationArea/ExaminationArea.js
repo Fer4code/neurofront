@@ -43,10 +43,8 @@ const ExaminationArea = React.memo((props) => {
                   aria-label="full width tabs example"
                 >
                   <Tab label="Observaciones" {...tab2Props(0)} />
-                  <Tab label="Medicamentos" {...tab2Props(1)} />
-                  <Tab label="Examen Fisico" {...tab2Props(2)} />
-                  <Tab label="Signos Cognitivos" {...tab2Props(3)} />
-                  <Tab label="Intervenciones Quirurgicas" {...tab2Props(4)} />
+                  <Tab label="Examen Fisico" {...tab2Props(1)} />
+                  
                 </Tabs>
               </AppBar>
               <SwipeableViews

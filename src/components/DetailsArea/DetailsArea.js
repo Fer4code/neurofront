@@ -45,8 +45,7 @@ const DetailsArea = React.memo((props) => {
                     <Tab label="Motivo de consulta" {...a11yProps(0)} />
                     <Tab label="Ant. personales" {...a11yProps(1)} />
                     <Tab label="Ant. familiares" {...a11yProps(2)} />
-                    <Tab label="Alergias" {...a11yProps(3)} />
-                    <Tab label="Vacunas" {...a11yProps(4)} />
+                    <Tab label="Vacunas" {...a11yProps(3)} />
                 </Tabs>
             </AppBar>
             <SwipeableViews
@@ -72,11 +71,21 @@ const DetailsArea = React.memo((props) => {
             </TabPanel>
             <TabPanel value={tab1value} index={1} dir={theme.direction}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid container spacing={2}>
+              <Grid item xl={8} lg={8} md={8} sm={8} xs={8}>
                       <PersonalBackgroundPicker 
                         value={props.personal_background}
                         valuesList={props.personalBackgroundList}
                         onChangeFnc={props.onChangeFnc}
                       />
+                      </Grid>
+                      <Grid item xl={4} lg={4} md={4} sm={4} xs={4}>
+                        <TextField
+                        fullWidth
+                        placeholder='Medicamentos'
+                        variant='outlined'/>
+                        </Grid>
+                    </Grid>
                     </Grid>
             </TabPanel>
             <TabPanel value={tab1value} index={2} dir={theme.direction}>
@@ -89,15 +98,6 @@ const DetailsArea = React.memo((props) => {
                     </Grid>
             </TabPanel>
             <TabPanel value={tab1value} index={3} dir={theme.direction}>
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <AllergyPicker
-                        value={props.allergy}
-                        valuesList={props.allergyList}
-                        onChangeFnc={props.onChangeFnc}
-                      />
-                    </Grid>
-            </TabPanel>
-            <TabPanel value={tab1value} index={4} dir={theme.direction}>
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                       <VaccinePicker
                         value={props.vaccine}

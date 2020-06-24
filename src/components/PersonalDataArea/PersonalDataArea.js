@@ -66,7 +66,6 @@ const PersonalDataArea = React.memo((props) => {
                         autoComplete="address"
                         name="direction"
                         variant="outlined"
-                        
                         required
                         fullWidth
                         id="direction"

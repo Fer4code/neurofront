@@ -9,6 +9,7 @@ const TabsArea = (props) => {
         settab1Value(newValue);
       };
     return(
+        <Grid container spacing={1}>
         <AppBar position="static" color="default" >
             <Tabs
                 value={tab1value}
@@ -26,6 +27,7 @@ const TabsArea = (props) => {
                 <Tab label="Vacunas" />
             </Tabs>
         </AppBar>
+        </Grid>
     )
 }
 

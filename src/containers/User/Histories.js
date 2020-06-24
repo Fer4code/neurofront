@@ -49,7 +49,8 @@ const useStyles = makeStyles({
     width: '100%',
   },
   cont:{
-    paddingTop: 80
+    paddingTop: 80,
+    paddingBottom: 80
   },
   container: {
     height: '65vh',
@@ -76,7 +77,7 @@ export default function StickyHeadTable() {
     <Paper className={classes.root}>
     <Grid container spacing={10} wrap='wrap' justify='flex-end' alignItems='stretch'>
     <Grid item xs={7} sm={7}>
-    <Typography variant="h3" color="initial">Historias</Typography>
+    <Typography variant="h3" gutterBottom color="initial">Historias</Typography>
     </Grid>
     <Grid item xs={5} sm={5}>
           <TextField
@@ -133,7 +134,6 @@ export default function StickyHeadTable() {
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}
-        labelRowsPerPage='Filas por pagina:'
         page={page}
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}

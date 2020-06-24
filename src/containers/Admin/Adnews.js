@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, Typography, Button, Dialog, DialogActions,TextField, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
+import { makeStyles, Typography, Button, Dialog, DialogActions,TextField, DialogContent, DialogContentText, DialogTitle, Container } from '@material-ui/core';
 import MaterialTable from 'material-table';
 import { ReactComponent as Check } from '../icons/check.svg';
 import { ReactComponent as War } from '../icons/warning.svg';
@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     paddingTop: theme.spacing(10),
     width: '100%',
-    height: '90%',
+    height: 'vh',
     position: 'center',
     align: 'center',
   },
@@ -58,9 +58,11 @@ export default function NewsTable() {
   ]);
 
   return (
+    <Container maxWidth="xl">
+      
     <div className={classes.root}>
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle>Agregar nueva API de oticias</DialogTitle>
+        <DialogTitle>Agregar nueva API de Noticias</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Por favor ingrese los detalles de la api de noticias
@@ -99,7 +101,7 @@ export default function NewsTable() {
         <DialogTitle>Observacion</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Por favor ingrese una observacion para deshabilitar la API
+            Por favor ingrese una observación para deshabilitar la API
           </DialogContentText>
           <TextField
             autoFocus
@@ -126,7 +128,7 @@ export default function NewsTable() {
       columns={[
         
         { title: 'Nombre', field: 'name' },
-        { title: 'Ubicacion', field: 'location'},        
+        { title: 'Ubicación', field: 'location'},        
         { title: 'Creado', field: 'created'},
         
       ]}
@@ -215,5 +217,6 @@ export default function NewsTable() {
       }}
     />
     </div>
+    </Container>
   );
 }

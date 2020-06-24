@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, } from 'react-router-dom'
 import { connect } from 'react-redux';
-import Container from '@material-ui/core/Container'
+import { Container, CssBaseline, ThemeProvider } from '@material-ui/core'
 
 
 import MenuAppBar from './components/Navigation/Navbar/Navbar'
@@ -29,6 +29,7 @@ import Medsview from './containers/User/Medsview'
 import Investigation from './containers/User/Investigation'
 
 import * as actions from './store/actions/index';
+import {light} from './theme'
 
 class App extends Component {
 
@@ -42,6 +43,8 @@ class App extends Component {
   }
   render() {
     return (
+      <ThemeProvider theme={light}>
+        <CssBaseline/>
       <Router>
         <div className="App">
           {/*<Navbar /> */}
@@ -72,6 +75,7 @@ class App extends Component {
         </div>
 
       </Router>
+      </ThemeProvider>
     )
   }
 }

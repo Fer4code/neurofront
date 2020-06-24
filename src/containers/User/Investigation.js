@@ -1,6 +1,6 @@
-import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import {Card, Grid} from '@material-ui/core/';
+import React, {useState} from 'react';
+import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
+import {Card, Grid, ClickAwayListener, Box, Container, CssBaseline} from '@material-ui/core/';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -15,6 +15,10 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Slider from '@material-ui/core/Slider';
 import Paper from '@material-ui/core/Paper'
 import {
+  Search as SearchIcon,
+  CloseOutlined as CloseOutlinedIcon
+} from "@material-ui/icons";
+import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
@@ -22,39 +26,60 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    
   },
   container: {
+    marginTop: 18,
     backgroundColor: "white",
-    margin: 25
+    borderRadius: "0.5rem"
+  },
+  paper: {
+    marginTop: theme.spacing(4),
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      width: '100%',
+      background: 'grey',
+      borderRadius: "0.5rem"
+    
   },
   pacient:{
-    margin: 25
+    marginTop: 25
   },
   icon: {
-    marginLeft: '80%',
-    marginTop: '15%',
-    color: 'green',
-    '&:hover': {
-    color: 'yellow',
-    cursor: 'pointer'
-    },
+    height: '40px'
   },
   button: {
-    margin: 1,
+        margin: theme.spacing(1)
   },
   search: {
-    marginRight: 1,
+    marginLeft: theme.spacing(5)
   },
   slider:{
   width: '100%',
-  padding: theme.spacing(3),
-  }
+  padding: theme.spacing(2),
+  
+  },
+  search: {
+    display: "flex",
+    justifyContent: "center",
+    
+    transition: theme.transitions.create("all", {
+      easing: theme.transitions.easing.easeIn,
+      duration: theme.transitions.duration.shortest
+    }),
+    marginLeft: theme.spacing(1)
+  },
 }));
 
-export default function ImgMediaCard() {
+export default function ImgMediaCard({onSearchClose}) {
   const classes = useStyles();
+  const theme = useTheme();
   const [selectedDate, setSelectedDate] = React.useState(new Date('2020-01-01T21:11:54'));
-  const [value, setValue] = React.useState([10, 50])
+  const [value, setValue] = React.useState([18,40])
+  const [isFocussed, setFocussed] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isShowingToast, showToast] = useState(false);
   
   const [selectedDateu, setSelectedDateu] = React.useState(Date());
 
@@ -102,70 +127,43 @@ export default function ImgMediaCard() {
       borderRadius: 8,
     },
   })(Slider);
+    
+  const onSearchCancel = () => {
+    setSearchTerm("");
+    setFocussed(false);
+    onSearchClose();
+  };
+  const onSearch = (event) => {
+    setFocussed(true);
+    if (event.key === "Enter") {
+      showToast(true);
+      setFocussed(false);
+      onSearchClose();
+    }
+  }
+  const onFocusLoss = (event) => {
+    setFocussed(false);
+    if (event.key === "Enter", "Tab") {
+     setFocussed(false);
+    }
+  }
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  
 
   return (
-    <div>
-      <Grid container  spacing={2} direction='row' alignItems="flex-start" justify="flex-start">
-      <Grid item xs={11} sm={11}><Typography variant="h3" color="initial">Investigacion</Typography></Grid>  
-      </Grid>
-      <Grid container  spacing={2} direction='row' alignItems="flex-start" justify="flex-start" className={classes.container}>
-        <Grid item xs={12} sm={12}>
-        <Autocomplete
-        multiple
-        id="tags-filled"
-        variant='outlined'
-        options={top100Films.map((option) => option.title)}
-        defaultValue={[top100Films[13].title]}
-        freeSolo
-        renderTags={(value, getTagProps) =>
-          value.map((option, index) => (
-            <Chip color='secondary' label={option} {...getTagProps({ index })} />
-          ))
-        }        
-        renderInput={(params) => (
-          <TextField {...params} variant="outlined" label="Datos de investigacion" placeholder="Ingrese sintomas o diagnosticos" />
-        )}
-      />
-        </Grid>
+    <Container component="main" maxWidth="false" className={classes.paper}>
+      <CssBaseline />
+      <h2>Investigación</h2>
+      <Grid container  
+      spacing={2} 
+      direction='row' 
+      alignItems="flex-start" 
+      justify="flex-start" 
+      className={classes.container}>
         <Grid item xs={6} sm={6}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                autoOk
-                fullWidth
-                variant="inline"
-                inputVariant="outlined"
-                label="Desde"
-                disableFuture
-                orientation='landscape'
-                format="dd/MM/yyyy"
-                value={selectedDate}
-                InputAdornmentProps={{ position: "end" }}
-                onChange={date => handleFrom(date)}
-              />
-                </MuiPickersUtilsProvider>
-        </Grid>
-        <Grid item xs={6} sm={6}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker
-              orientation='landscape'
-              clearable
-              autoOk
-              fullWidth
-              variant="inline"
-              inputVariant="outlined"
-              label="Hasta"
-              disableFuture
-              format="dd/MM/yyyy"
-              value={selectedDateu}
-              InputAdornmentProps={{ position: "end" }}
-              onChange={date1 => handleUpto(date1)}
-            />
-              </MuiPickersUtilsProvider>
-        </Grid>
-        <Grid item xs={6} sm={6}>
+        
         <Autocomplete
         multiple
         id="tags-filled"
@@ -183,23 +181,97 @@ export default function ImgMediaCard() {
         )}
       />
         </Grid>
-        <Grid item xs={6} sm={6}>
-                <Paper elevation={0} variant="outlined" className={classes.slider}>
+        <Grid item xs={3} sm={3}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                autoOk
+                fullWidth
+                variant="inline"
+                inputVariant="outlined"
+                label="Desde"
+                disableFuture
+                orientation='landscape'
+                format="dd/MM/yyyy"
+                value={selectedDate}
+                InputAdornmentProps={{ position: "end" }}
+                onChange={date => handleFrom(date)}
                 
+              />
+                </MuiPickersUtilsProvider>
+        </Grid>
+        <Grid item xs={3} sm={3}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+              orientation='landscape'
+              clearable
+              autoOk
+              fullWidth
+              variant="inline"
+              inputVariant="outlined"
+              label="Hasta"
+              disableFuture
+              format="dd/MM/yyyy"
+              value={selectedDateu}
+              InputAdornmentProps={{ position: "end" }}
+              onChange={date1 => handleUpto(date1)}
+              
+            />
+              </MuiPickersUtilsProvider>
+        </Grid>
+        <Grid item xs={8} sm={8}>
+        <ClickAwayListener onClick={() => setFocussed(true)} onClickAway={onFocusLoss}>
+        <Box
+        className={classes.search}
+        borderRadius={theme.shape.borderRadius}
+        bgcolor={
+          isFocussed
+            ? '#455a64'
+            : '#bdbdbd'
+        }
+        boxShadow={isFocussed ? 2 : 0}
+        height={"5.7rem"}
+      >
+        <Autocomplete
+        multiple
+        id="tags-outlined"
+        options={top100Films}
+        getOptionLabel={option => option.title}
+        filterSelectedOptions
+        fullWidth
+        ChipProps={{color:'primary'}}
+        renderInput={params => (
+          <div>
+          <TextField
+            multiple
+            {...params}
+            onClick={() => setFocussed(true)}
+            placeholder="Ingrese sintomas, antecedentes o diagnosticos"
+            InputProps={{...params.InputProps, disableUnderline: true,   }}
+            
+          />
+          </div>
+        )}
+      />       
+        </Box>
+      </ClickAwayListener>
+      
+        </Grid>
+        <Grid item alignItems='flex-end' xs={4} sm={4}>
+                <Paper elevation={0} variant="outlined" className={classes.slider}>
                 <PrettoSlider aria-label="pretto slider" defaultValue={value} valueLabelDisplay='on' onChangeCommitted={handleChange} />
                 <Typography align='center'>Grupo Etareo</Typography>
                 </Paper>
         </Grid>
-        <Grid container spacing={2} direction='row' alignItems="center" justify="flex-end" >
-        <Grid item xs={12} sm={12} className={classes.search}>
+        <Grid container spacing={2} direction='row' alignItems="center" justify="center" >
+        <Grid item xs={4} sm={4} className={classes.search}>
         <Button
         variant="contained"
         color="primary"
         className={classes.button}
-        endIcon={<Icon>search</Icon>}
+        endIcon={<Icon fontSize='large'>search</Icon>}
         fullWidth
       >
-        Buscar
+        <Typography variant='h6'>Buscar</Typography>
       </Button>
       </Grid>
         </Grid>
@@ -482,7 +554,7 @@ export default function ImgMediaCard() {
         </Card>
       </Grid>
     </Grid>
-    </div>
+    </Container>
   );
 }
 const top100Films = [

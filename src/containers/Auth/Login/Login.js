@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 
-import logo from '../../../img/diagnose.svg'
+import logo from '../../../img/MD1.svg'
 import * as actions from '../../../store/actions/index';
 
 const useStyles = theme => ({
@@ -19,15 +19,16 @@ const useStyles = theme => ({
       width: '100%',
     },
     imagen: {
-      width: '50%',
-      height: '50%',
-      marginLeft: theme.spacing(16),
-      alignItems: 'center',
+      width: '60%',
+      height: '60%',
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(4)
     },
     form: {
       width: '100%', // Fix IE 11 issue.
       marginTop: theme.spacing(14),
       background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+      borderRadius: '0.5rem'
     },
     submit: {
       fontSize: theme.typography.pxToRem(16),
@@ -37,16 +38,11 @@ const useStyles = theme => ({
       width: '100%',
       background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
     },
-    img: {
-      width: '50%',
-      heigth:'50%',
-      alignItems: 'center',
-      marginTop: theme.spacing(4),
-      marginRight: theme.spacing(8)
-    },
+    
     title: {
       textAlign: 'center',
-      margin: theme.spacing(0, 0 ,2)
+      marginBottom: theme.spacing(2),
+
     }
   });
 
@@ -73,10 +69,19 @@ class Login extends Component {
             <Container maxWidth="xs" className={classes.form}>
       
             <form noValidate onSubmit={this.onSubmit}>
-              <div>
+              <Grid
+                container
+                spacing={1}
+                direction="row"
+                justify="center"
+                alignItems="center"
+                alignContent="center"
+                wrap="nowrap"
+                
+              >
                 <img className={classes.imagen} src={logo} alt="logo"/>
-              </div>
-              <h1 className={classes.title} >MedSys</h1>
+              </Grid>
+              <h2 className={classes.title}>Ingresa a tu cuenta</h2>
               <Grid container spacing={2} >
               <Grid Item xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Typography variant="subtitle2" color="initial">Correo electronico</Typography>
@@ -91,7 +96,7 @@ class Login extends Component {
                   required
                   fullWidth
                   autoComplete="true"
-                  autoFocus
+                  size='small'
                   placeholder="Correo electronico"
                   error={this.props.error}
                   helperText={this.props.error}
@@ -110,13 +115,14 @@ class Login extends Component {
                   required
                   autoComplete='true'
                   fullWidth
+                  size='small'
                   placeholder="Ingrese su contraseña"
                   error={this.props.error}
                   helperText={this.props.error}
                 />
               </Grid>
               <Button className={classes.submit} variant="contained" type="submit" color="primary" fullWidth >
-                Iniciar Sesion
+                Iniciar Sesión
               </Button>
               </Grid>
             </form>
