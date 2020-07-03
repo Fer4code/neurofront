@@ -71,7 +71,7 @@ export default function AdProfile (props) {
                       className="ccalendari"
                       component="img"
                       alt="report"                    
-                      image={require("../../img/prescription.svg")}
+                      image={require("../../img/report.png")}
                       
                       title="Historias"
                       onClick={()=>history.push('/Adexams')}  

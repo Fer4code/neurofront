@@ -73,20 +73,18 @@ const useStyles = makeStyles(theme => ({
     },
     backgroundColor: '#F2F2F2'
   },
-  
   toolbar: {
-      marginTop: theme.spacing(2),
+    marginTop: theme.spacing(2),
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    
   },
-  content: {
+   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
   },
 }))
 
@@ -125,7 +123,7 @@ export default function Cajon(props){
       >
           <div className={classes.toolbar}>
           <IconButton onClick={handleDrawerClose}>
-              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+              {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
           </IconButton>
           </div>
           <Divider />
@@ -201,6 +199,7 @@ export default function Cajon(props){
   </List>
   </Drawer>
   </ClickAwayListener>
+ 
   </div>
 );
   const adminDrawer =(

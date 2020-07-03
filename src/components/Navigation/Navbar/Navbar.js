@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import {useHistory} from 'react-router-dom'
 import { Drawer, AppBar, Toolbar, List, CssBaseline, Divider, IconButton, ListItem, ListItemAvatar, ListItemText, ListItemIcon} from '@material-ui/core/';
 import { Avatar, MenuItem, Grid, Menu, useScrollTrigger, makeStyles, useTheme, ClickAwayListener} from '@material-ui/core/';
 
@@ -18,6 +19,7 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import AppsIcon from '@material-ui/icons/Apps';
 
+
 import logo from '../../../img/MD1.svg';
 
 import NavigationItems from '../NavigationItems/NavigationItems';
@@ -35,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   appBar: {      
-    background : '#444444',
+    backgroundColor : theme.palette.navbar.color,
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
@@ -151,7 +153,7 @@ export default function Navbar(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [log] = React.useState(true)
-  const [user] = React.useState(false)
+  const [user] = React.useState(true)
   const token = React.useState(false)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openu = Boolean(anchorEl);
@@ -189,6 +191,199 @@ export default function Navbar(props) {
         
     </Menu>
   );
+  const history = useHistory();
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+  const userDrawer =(
+    <div>
+      <ClickAwayListener onClickAway={handleDrawerClose}>
+       <Drawer
+              onClick={handleDrawerOpen}
+              variant="permanent"
+              className={clsx(classes.drawer, {
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+              })}
+              classes={{
+              paper: clsx({
+                  [classes.drawerOpen]: open,
+                  [classes.drawerClose]: !open,
+              }),
+              }}
+      >
+          <div className={classes.toolbar}>
+          <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+          </div>
+          <Divider />
+          <List>
+          <ListItem>
+          <ListItemIcon><Avatar alt="User Sharp" src="/static/images/avatar/1.jpg" className={classes.large} /></ListItemIcon>
+          <ListItemText
+          primary='Nombre Apellido'
+          secondary='Usuario'
+          />
+          </ListItem>
+          </List>
+<Divider />
+<Divider />
+<List>
+<ListItem button onClick={()=>history.push('/pacientform')}>
+    <ListItemIcon>
+        <PersonAddIcon/>
+    </ListItemIcon>
+    <ListItemText primary='Nuevo Paciente'/>
+</ListItem>
+<ListItem button >
+    <ListItemIcon>
+        <NoteAddIcon />
+    </ListItemIcon>
+    <ListItemText primary='Historias'/>
+</ListItem>
+<ListItem button onClick={()=>history.push('/investigation')}>
+    <ListItemIcon>
+        <FindInPageIcon/>
+    </ListItemIcon>
+    <ListItemText primary='Investigación'/>
+</ListItem>
+<ListItem button >
+    <ListItemIcon>
+        <DonutLargeIcon/>
+    </ListItemIcon>
+    <ListItemText primary='Medicamentos'/>
+</ListItem>
+<ListItem button onClick={()=>history.push('/examsview')}>
+    <ListItemIcon>
+    <DescriptionIcon/>
+    </ListItemIcon>
+    <ListItemText primary='Exámenes'/>
+</ListItem>
+<ListItem button >
+    <ListItemIcon>
+        <FiberNewIcon/>
+    </ListItemIcon>
+    <ListItemText primary='Noticias'/>
+</ListItem>
+<ListItem button onClick={()=>history.push('/profile')}>
+    <ListItemIcon>
+        <AppsIcon/>
+    </ListItemIcon>
+    <ListItemText primary='Menú'/>
+</ListItem>
+</List>
+<Divider/>
+<List>
+<ListItem button >
+    <ListItemIcon>
+        <SettingsIcon/>
+    </ListItemIcon>
+    <ListItemText primary='Configuración'/>
+</ListItem>
+      <ListItem button >
+          <ListItemIcon>
+              <PowerSettingsNewIcon/>
+          </ListItemIcon>
+          <ListItemText primary='Cerrar Sesión'/>
+      </ListItem>
+  </List>
+  </Drawer>
+  </ClickAwayListener>
+  
+  </div>
+);
+  const adminDrawer =(
+  <div>
+    <ClickAwayListener onClickAway={handleDrawerClose}>
+      <Drawer
+              variant="permanent"
+              onClick={handleDrawerOpen}
+              className={clsx(classes.drawer, {
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+              })}
+              classes={{
+              paper: clsx({
+                  [classes.drawerOpen]: open,
+                  [classes.drawerClose]: !open,
+              }),
+              }}
+      >
+          <div className={classes.toolbar}>
+          <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+          </div>
+          <Divider/>
+      <div>
+          <List>
+          <ListItem>
+          <ListItemIcon><Avatar alt="Admin Sharp" src="/static/images/avatar/1.jpg" className={classes.large} /></ListItemIcon>
+          <ListItemText
+          primary='Nombre Apellido'
+          secondary='Administrador'
+          />
+          </ListItem>
+          </List>
+          <Divider/>
+          <List>
+          <ListItem button >
+          <ListItemIcon>
+              <SupervisorAccountIcon/>
+          </ListItemIcon>
+          <ListItemText primary='Usuarios'/>
+          </ListItem>
+          <ListItem button >
+          <ListItemIcon>
+              <DonutLargeIcon/>
+          </ListItemIcon>
+          <ListItemText primary='Medicamentos'/>
+          </ListItem>
+          <ListItem button >
+          <ListItemIcon>
+              <DescriptionIcon/>
+          </ListItemIcon>
+          <ListItemText primary='Examenes'/>
+          </ListItem>
+          <ListItem button >
+          <ListItemIcon>
+              <FiberNewIcon/>
+          </ListItemIcon>
+          <ListItemText primary='Noticias'/>
+          </ListItem>
+          <ListItem button >
+          <ListItemIcon>
+              <AppsIcon/>
+          </ListItemIcon>
+          <ListItemText primary='Menú'/>
+          </ListItem>
+          </List>
+          <Divider/>
+          <List>
+          <ListItem button >
+          <ListItemIcon>
+              <SettingsIcon/>
+          </ListItemIcon>
+          <ListItemText primary='Configuración'/>
+          </ListItem>
+              <ListItem button >
+                  <ListItemIcon>
+                      <PowerSettingsNewIcon/>
+                  </ListItemIcon>
+                  <ListItemText primary='Cerrar Sesión'/>
+              </ListItem>
+          </List>
+      </div>
+</Drawer>
+</ClickAwayListener>
+</div>
+);
   return (
     <React.Fragment>
     <div className={classes.root}>
@@ -203,7 +398,7 @@ export default function Navbar(props) {
         <Toolbar>
           <img src={logo} className={classes.imagen} onClick={event => window.location.href='/'} alt='logo'/>
           <Grid container alignItems="flex-start" justify="flex-end" direction="row" className={classes.items} >
-            <NavigationItems style='subtitle'/>
+            <NavigationItems stylew='subtitle'/>
           </Grid>
           <div className={classes.sectionMobile}>
 
@@ -218,7 +413,7 @@ export default function Navbar(props) {
       </AppBar>
       </ElevationScroll>
       {renderMobileMenu}
-      <Cajon/>
+      {/*{user ? userDrawer : adminDrawer}*/}
       <div className={classes.toolbar} />
     </div>
     </React.Fragment>

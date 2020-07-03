@@ -26,6 +26,9 @@ const fontFamilyMetropolis = {
   letterSpacing: "0.015rem"
 };
 
+const drawerWidth = 240;
+const miniWidth = 73;
+
 // A custom theme for this app
 const lightMuiTheme = createMuiTheme({
   type: "light",
@@ -43,6 +46,9 @@ const lightMuiTheme = createMuiTheme({
     background: {
       default: "#4384D9",
       highlight: "#F1F3F4"
+    },
+    navbar: {
+      color: '#444444'
     },
     button: {
       color: '#651fff'
@@ -119,7 +125,7 @@ const lightMuiTheme = createMuiTheme({
       noteColorCheck: "#0007",
       labelBackground: "#0002"
     }
-  }
+  },
 }, esES);
 
 const darkMuiTheme = createMuiTheme({

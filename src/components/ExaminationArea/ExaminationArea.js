@@ -29,7 +29,7 @@ const ExaminationArea = React.memo((props) => {
   }
   return(
     <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-      <ExpansionArea title="Examinación">
+      <ExpansionArea title="Examen Físico">
           <Grid container spacing={2}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <AppBar position="static" color="default" >

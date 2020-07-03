@@ -23,7 +23,7 @@ const NavigationItem = (props) => {
     return (
         <Link to={props.link}>
             <MenuItem>
-                <Typography className={classes[props.style]}>
+                <Typography className={classes[props.stylew]}>
                     {props.children}
                 </Typography>
             </MenuItem>

@@ -19,7 +19,7 @@ const DatePicker = (props) => {
                 disableFuture
                 orientation="landscape"
                 rightArrowIcon
-                maxDateMessage="Fecha posterior al dia de hoy"
+                maxDateMessage="Fecha posterior al día de hoy"
                 value={props.birth_date}
                 onChange={props.onChangeFnc}
                 InputAdornmentProps={{ position: "start" }}

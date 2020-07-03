@@ -1,6 +1,5 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
+import { Typography, Grid, TextField} from '@material-ui/core/';
 
 import ExpansionArea from '../UI/ExpansionArea/ExpansionArea';
 import DatePicker from '../UI/Pickers/DatePicker/DatePicker'
@@ -22,7 +21,22 @@ const PersonalDataArea = React.memo((props) => {
                 <Grid item xl={3} lg={3} md={3} sm={6} xs={12}>
                     <DatePicker birth_date={props.birth_date} onChangeFnc={props.onChangeFnc}/>
                 </Grid>
-                <Grid item xl={3} lg={3} md={3} sm={6} xs={12}>
+                <Grid item xl={1} lg={1} md={1} sm={6} xs={12}>
+                <TextField
+                        autoComplete="address"
+                        name="direction"
+                        variant="outlined"
+                        InputProps={{
+                            readOnly: true,
+                          }}
+                        fullWidth
+                        id="direction"
+                        label="Edad"
+                        direction={props.direction} 
+                        onChange={props.onChangeFnc}
+                    />
+                </Grid>
+                <Grid item xl={2} lg={2} md={2} sm={6} xs={12}>
                     <GenderPicker gender={props.gender} onChangeFnc={props.onChangeFnc}/>
                 </Grid>
                 <Grid item xl={3} lg={3} md={3} sm={6} xs={12}>

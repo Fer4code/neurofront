@@ -6,6 +6,8 @@ import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Chip from '@material-ui/core/Chip';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import TabPanel from '../TabPanel/TabPanel';
 import PersonalBackgroundPicker from '../UI/Pickers/PersonalBackgroundPicker/PersonalBackgroundPicker'
@@ -14,6 +16,17 @@ import AllergyPicker from '../UI/Pickers/AllergyPicker/AllergyPicker'
 import VaccinePicker from '../UI/Pickers/VaccinePicker/VaccinePicker'
 
 
+const top100Films = [
+  { title: '2001: A Space Odyssey', year: 1968 },
+  { title: "Singin' in the Rain", year: 1952 },
+  { title: 'Toy Story', year: 1995 },
+  { title: 'Bicycle Thieves', year: 1948 },
+  { title: 'The Kid', year: 1921 },
+  { title: 'Inglourious Basterds', year: 2009 },
+  { title: 'Snatch', year: 2000 },
+  { title: '3 Idiots', year: 2009 },
+  { title: 'Monty Python and the Holy Grail', year: 1975 },
+];
 
 const DetailsArea = React.memo((props) => {
     const theme = useTheme()
@@ -43,9 +56,11 @@ const DetailsArea = React.memo((props) => {
                   aria-label="full width tabs example"
                 >
                     <Tab label="Motivo de consulta" {...a11yProps(0)} />
-                    <Tab label="Ant. personales" {...a11yProps(1)} />
-                    <Tab label="Ant. familiares" {...a11yProps(2)} />
-                    <Tab label="Vacunas" {...a11yProps(3)} />
+                    <Tab label="Sintomatología" {...a11yProps(1)} />
+                    <Tab label="Ant. personales" {...a11yProps(2)} />
+                    <Tab label="Ant. familiares" {...a11yProps(3)} />
+                    <Tab label="Vacunas" {...a11yProps(4)} />
+                    <Tab label="Resumen" {...a11yProps(5)} />
                 </Tabs>
             </AppBar>
             <SwipeableViews
@@ -69,7 +84,26 @@ const DetailsArea = React.memo((props) => {
                       />
                     </Grid>
             </TabPanel>
-            <TabPanel value={tab1value} index={1} dir={theme.direction}>
+            <TabPanel value={tab1value} index={1} dir={theme.direction}>                  
+                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <Autocomplete
+                          multiple
+                          id="tags-filled"
+                          variant='outlined'
+                          options={top100Films.map((option) => option.title)}
+                          freeSolo
+                          renderTags={(value, getTagProps) =>
+                            value.map((option, index) => (
+                              <Chip color='primary' label={option} {...getTagProps({ index })} />
+                            ))
+                          }        
+                          renderInput={(params) => (
+                            <TextField {...params} variant="outlined" placeholder="Sintomatología" />
+                          )}
+                        />
+                    </Grid>
+            </TabPanel>
+            <TabPanel value={tab1value} index={2} dir={theme.direction}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <Grid container spacing={2}>
               <Grid item xl={8} lg={8} md={8} sm={8} xs={8}>
@@ -80,15 +114,26 @@ const DetailsArea = React.memo((props) => {
                       />
                       </Grid>
                       <Grid item xl={4} lg={4} md={4} sm={4} xs={4}>
-                        <TextField
-                        fullWidth
-                        placeholder='Medicamentos'
-                        variant='outlined'/>
+                      <Autocomplete
+                          multiple
+                          id="tags-filled"
+                          variant='outlined'
+                          options={top100Films.map((option) => option.title)}
+                          freeSolo
+                          renderTags={(value, getTagProps) =>
+                            value.map((option, index) => (
+                              <Chip color='primary' label={option} {...getTagProps({ index })} />
+                            ))
+                          }        
+                          renderInput={(params) => (
+                            <TextField {...params} variant="outlined" placeholder="Medicamentos" />
+                          )}
+                        />
                         </Grid>
                     </Grid>
                     </Grid>
             </TabPanel>
-            <TabPanel value={tab1value} index={2} dir={theme.direction}>
+            <TabPanel value={tab1value} index={3} dir={theme.direction}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                       <FamilyBackgroundPicker
                         value={props.family_background}
@@ -97,7 +142,7 @@ const DetailsArea = React.memo((props) => {
                       />
                     </Grid>
             </TabPanel>
-            <TabPanel value={tab1value} index={3} dir={theme.direction}>
+            <TabPanel value={tab1value} index={4} dir={theme.direction}>
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                       <VaccinePicker
                         value={props.vaccine}
@@ -105,7 +150,60 @@ const DetailsArea = React.memo((props) => {
                         onChangeFnc={props.onChangeFnc}
                       />
                     </Grid>
-            </TabPanel>      
+            </TabPanel>
+            <TabPanel value={tab1value} index={5} dir={theme.direction}>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid container spacing={2}>
+              <Grid item xl={8} lg={8} md={8} sm={8} xs={8}>
+              <Autocomplete
+                          multiple
+                          id="tags-filled"
+                          variant='outlined'
+                          options={top100Films.map((option) => option.title)}
+                          freeSolo
+                          renderTags={(value, getTagProps) =>
+                            value.map((option, index) => (
+                              <Chip color='primary' label={option} {...getTagProps({ index })} />
+                            ))
+                          }        
+                          renderInput={(params) => (
+                            <TextField {...params} variant="outlined" placeholder="Datos" />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xl={4} lg={4} md={4} sm={4} xs={4}>
+                      <Autocomplete
+                          multiple
+                          id="tags-filled"
+                          variant='outlined'
+                          options={top100Films.map((option) => option.title)}
+                          freeSolo
+                          renderTags={(value, getTagProps) =>
+                            value.map((option, index) => (
+                              <Chip color='primary' label={option} {...getTagProps({ index })} />
+                            ))
+                          }        
+                          renderInput={(params) => (
+                            <TextField {...params} variant="outlined" placeholder="Diagnostico" />
+                          )}
+                        />
+                        </Grid>
+                        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                        <TextField
+                        name="description"
+                        variant="outlined"
+                        multiline
+                        fullWidth
+                        rowsMax="4"
+                        id="motivo_consulta"
+                        label="Observaciones"
+                        value={props.description}
+                        onChange={props.onChangeFnc}
+                      />
+                        </Grid>
+                    </Grid>
+                    </Grid>
+            </TabPanel>
           </SwipeableViews>
             </Grid>
     )
@@ -116,7 +214,7 @@ const DetailsArea = React.memo((props) => {
     }
     return currentResult && ( prevProps[name] === nextProps[name] )
 }, true) 
-      
+
 })
 
 export default DetailsArea

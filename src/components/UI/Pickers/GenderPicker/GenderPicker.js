@@ -21,7 +21,7 @@ const GenderPicker = React.memo((props) => {
               required
               select
               fullWidth
-              label="Sexo"
+              label="Género"
               value={props.gender}
               onChange={props.onChangeFnc}        
               variant="outlined"

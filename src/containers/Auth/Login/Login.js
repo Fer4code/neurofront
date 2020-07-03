@@ -7,9 +7,11 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom'
 
 import logo from '../../../img/MD1.svg'
 import * as actions from '../../../store/actions/index';
+import Footer from '../../Landing/Footer';
 
 const useStyles = theme => ({
     paper: {
@@ -63,11 +65,11 @@ class Login extends Component {
         const { classes } = this.props;
         let authRedirect = null;
             if(this.props.isAuthenticated) {
-                authRedirect = <Redirect to={"/pacientform"} />
+                authRedirect = <Redirect to={"/profile"} />
             }
         return (
+          <main>
             <Container maxWidth="xs" className={classes.form}>
-      
             <form noValidate onSubmit={this.onSubmit}>
               <Grid
                 container
@@ -77,7 +79,6 @@ class Login extends Component {
                 alignItems="center"
                 alignContent="center"
                 wrap="nowrap"
-                
               >
                 <img className={classes.imagen} src={logo} alt="logo"/>
               </Grid>
@@ -121,13 +122,19 @@ class Login extends Component {
                   helperText={this.props.error}
                 />
               </Grid>
-              <Button className={classes.submit} variant="contained" type="submit" color="primary" fullWidth >
+              <Button className={classes.submit} variant="contained" type="submit" color='inherit' fullWidth >
                 Iniciar Sesión
               </Button>
+              <Link to={"/register"}>
+              <Typography variant="caption" gutterBottom color="initial">Aún no tienes cuenta? Crea una cuenta para ti</Typography>
+              </Link>
+              
               </Grid>
             </form>
             {authRedirect}
+            
       </Container>
+      </main>
         )
     }
 }

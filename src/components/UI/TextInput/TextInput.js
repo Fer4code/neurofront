@@ -13,7 +13,7 @@ const TextInput = (props) => (
         label="Segundo Nombre"
         autoFocus={this.props.}
                 
-              />
+    />
 )
 
 export default TextInput;

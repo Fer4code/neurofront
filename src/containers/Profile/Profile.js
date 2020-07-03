@@ -70,7 +70,7 @@ export default function Profile (props) {
                       component="img"
                       alt="report"                    
                       image={require("../../img/report.png")}
-                      onClick={()=>history.push('/histories')}
+                      onClick={()=>history.push('/patientsview')}
                       title="Historias"
                                 
                     />
@@ -116,8 +116,7 @@ export default function Profile (props) {
                     <CardMedia
                       className="ccalendari"
                       component="img"
-                      alt="Citas"                    
-                      image={require("../../img/prescription.svg")}
+                      image={require("../../img/qualification.png")}
                       onClick={()=>history.push('/examsview')}
                       title="Examenes"
                                 
