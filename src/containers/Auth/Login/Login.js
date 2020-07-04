@@ -99,8 +99,8 @@ class Login extends Component {
                   autoComplete="true"
                   size='small'
                   placeholder="Correo electronico"
-                  error={this.props.error}
-                  helperText={this.props.error}
+                  error={this.props.error == "Recurso no encontrado" ? this.props.error : null}
+                  helperText={this.props.error == "Recurso no encontrado" ? "Correo invalido" : null}
                 />
               </Grid>
               <Grid className={classes.paper} Item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -118,8 +118,8 @@ class Login extends Component {
                   fullWidth
                   size='small'
                   placeholder="Ingrese su contraseña"
-                  error={this.props.error}
-                  helperText={this.props.error}
+                  error={this.props.error == "Contraseña invalida" ? this.props.error : null}
+                  helperText={this.props.error == "Contraseña invalida" ? this.props.error : null}
                 />
               </Grid>
               <Button className={classes.submit} variant="contained" type="submit" color='inherit' fullWidth >

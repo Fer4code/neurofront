@@ -45,10 +45,10 @@ const PersonalDataArea = React.memo((props) => {
                 <Grid item xl={3} lg={3} md={3} sm={6} xs={12}>
                     <StatusPicker marital_status={props.marital_status} onChangeFnc={props.onChangeFnc}/>
                 </Grid>
-                <Grid item xl={3} lg={3} md={3} sm={6} xs={12}>
+                <Grid item xl={2} lg={2} md={3} sm={6} xs={12}>
                     <DocumentPicker documentType={props.documentType} onChangeFnc={props.onChangeFnc}/>
                 </Grid>
-                <Grid item xl={3} lg={3} md={3} sm={6} xs={12}>
+                <Grid item xl={2} lg={2} md={3} sm={6} xs={12}>
                     <TextField className="cidnumber"
                     id="document"
                     name={props.documentType}
@@ -70,9 +70,21 @@ const PersonalDataArea = React.memo((props) => {
                     />
                 </Grid>
                 <Grid item xl={3} lg={3} md={3} sm={6} xs={12}>
+                    <TextField className="cidnumber"
+                    id="document"
+                    name={props.documentType}
+                    required
+                    fullWidth
+                    label="Profesion"
+                    type="input"
+                    variant='outlined   '
+                    
+                    />
+                </Grid>
+                <Grid item xl={3} lg={2} md={3} sm={6} xs={12}>
                     <TelephoneInput id="telephone1" label="Telefono" name="telephone" value={props.telephone} onChangePrefixed={props.onChangePrefixed}/>
                 </Grid>
-                <Grid item xl={3} lg={3} md={3} sm={6} xs={12}>
+                <Grid item xl={2} lg={2} md={3} sm={6} xs={12}>
                     <TelephoneInput id="telephone2" label="Telefono Secundario" name="telephone2" value={props.telephone2} onChangePrefixed={props.onChangePrefixed}/>
                 </Grid>
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>

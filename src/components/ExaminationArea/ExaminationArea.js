@@ -42,9 +42,8 @@ const ExaminationArea = React.memo((props) => {
                   FullWidthTabs
                   aria-label="full width tabs example"
                 >
-                  <Tab label="Observaciones" {...tab2Props(0)} />
-                  <Tab label="Examen Fisico" {...tab2Props(1)} />
-                  
+                  <Tab label= "Examen Fisico"{...tab2Props(0)} />
+                  <Tab label="Observaciones"{...tab2Props(1)} />
                 </Tabs>
               </AppBar>
               <SwipeableViews
@@ -52,7 +51,81 @@ const ExaminationArea = React.memo((props) => {
                 index={tab2value}
                 onChangeIndex={tab2handleChangeIndex}
               >
-                <TabPanel value={tab2value} index={0} dir={theme.direction}>                  
+           <TabPanel value={tab2value} index={0} dir={theme.direction}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <Grid container spacing={1}>
+                  <Grid item lg={10}>
+                    <TextField
+                          autoComplete=""
+                          name="fisical_exam"
+                          variant="outlined"
+                          required
+                          multiline
+                          rows={8}
+                          fullWidth
+                          rowsMax="10"
+                          id="fisical_exam"
+                          label="Examen Fisico"
+                          value={props.fisical_exam}
+                          onChange={props.onChangeFnc}
+                        />
+                  </Grid>
+                  <Grid item lg={2}>
+                    <Grid container direction="column" spacing={1}>
+                    <Grid item lg={12}>
+                              <TextField
+                              name="observations"
+                              variant="outlined"
+                              fullWidth
+                              size='small'
+                              id="diastolica"
+                              label="Presion Diastolica"
+                              value={props.observations}
+                              onChange={props.onChangeFnc}
+                            />
+                          </Grid>
+                          <Grid item lg={12}>
+                              <TextField
+                              name="observations"
+                              variant="outlined"
+                              fullWidth
+                              size='small'
+                              id="diastolica"
+                              label="Presion Sistolica"
+                              value={props.observations}
+                              onChange={props.onChangeFnc}
+                            />
+                          </Grid>
+                          <Grid item lg={12}>
+                              <TextField
+                              name="observations"
+                              variant="outlined"
+                              fullWidth
+                              size='small'
+                              id="diastolica"
+                              label="Estatura (cm)"
+                              value={props.observations}
+                              onChange={props.onChangeFnc}
+                            />
+                          </Grid>
+                          <Grid item lg={12}>
+                              <TextField
+                              name="observations"
+                              variant="outlined"
+                              fullWidth
+                              size='small'
+                              id="diastolica"
+                              label="Peso (Kg)"
+                              value={props.observations}
+                              onChange={props.onChangeFnc}
+                            />
+                          </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                    </Grid>
+            </TabPanel>
+            <TabPanel value={tab2value} index={1} dir={theme.direction}>                  
                     <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                       <TextField
                         autoComplete=""
@@ -65,65 +138,6 @@ const ExaminationArea = React.memo((props) => {
                         id="observations"
                         label="Observaciones"
                         value={props.observations}
-                        onChange={props.onChangeFnc}
-                      />
-                    </Grid>
-            </TabPanel>
-            <TabPanel value={tab2value} index={1} dir={theme.direction}>
-            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <MedicinePicker 
-                        value={props.medicine}
-                        valuesList={props.medicineList}
-                        onChangeFnc={props.onChangeFnc}
-                      />
-                    </Grid>
-            </TabPanel>
-            <TabPanel value={tab2value} index={2} dir={theme.direction}>
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <TextField
-                        autoComplete=""
-                        name="fisical_exam"
-                        variant="outlined"
-                        required
-                        multiline
-                        fullWidth
-                        rowsMax="10"
-                        id="fisical_exam"
-                        label="Examen Fisico"
-                        value={props.fisical_exam}
-                        onChange={props.onChangeFnc}
-                      />
-                    </Grid>
-            </TabPanel>
-            <TabPanel value={tab2value} index={3} dir={theme.direction}>
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <TextField
-                        autoComplete=""
-                        name="cognitions"
-                        variant="outlined"
-                        multiline
-                        fullWidth
-                        rowsMax="10"
-                        id="allergies"
-                        label="Signos Cognitivos"
-                        value={props.cognitions}
-                        onChange={props.onChangeFnc}
-                      />
-                    </Grid>
-            </TabPanel>
-            <TabPanel value={tab2value} index={4} dir={theme.direction}>
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <TextField
-                        autoComplete=""
-                        name="surgeries"
-                        variant="outlined"
-                        required
-                        multiline
-                        fullWidth
-                        rowsMax="10"
-                        id="surgeries"
-                        label="Intervenciones quirurgicas"
-                        value={props.surgeries}
                         onChange={props.onChangeFnc}
                       />
                     </Grid>

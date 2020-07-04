@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import axios from '../../axios-instance';
 import { makeStyles } from '@material-ui/core/styles';
 import {Card, Grid} from '@material-ui/core/';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -64,14 +67,40 @@ const useStyles = makeStyles  ((theme) => ({
   }
 }));
 
-export default function ImgMediaCard() {
+const ImgMediaCard =  function(props) {
   const classes = useStyles();
-  const [selectedDate, setSelectedDate] = React.useState(new Date('2020-01-01T21:11:54'));
-  const { useState } = React;
-  
-  const [data, setData] = useState([
-    { consult: 'Dolor de cabeza fuerte', date: '20/02/2020', description: 'text' },
-  ]);
+  const { id } = useParams()
+  const [pacient, setPacient] = useState({
+    first_name: null,
+    last_name: null,
+    clinical_stories: []
+  })
+
+  const changeData = function(e) {
+    setPacient({
+      ...pacient,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  useEffect(() => {
+    if(!pacient.first_name) {
+      const config = {
+        headers: { Authorization: "Bearer " + props.token }
+      }
+      axios.get('pacients/' + id, config)
+        .then((response) => {
+          setPacient({
+            first_name: response.data.data.first_name,
+            last_name: response.data.data.last_name,
+            clinical_stories: response.data.data.clinical_stories,
+          })
+        })
+        .catch((err) => {
+
+        })
+    }
+  })
 
   return (
     <div>
@@ -119,6 +148,8 @@ export default function ImgMediaCard() {
                                     type="text"
                                     htmlFor="name"
                                     name="first_name"
+                                    value={pacient.first_name}
+                                    onChange={changeData}
                                     variant="outlined"
                                     fullWidth
                                     autoComplete="true"
@@ -135,7 +166,9 @@ export default function ImgMediaCard() {
                                 id="first"
                                 type="text"
                                 htmlFor="name"
-                                name="first_name"
+                                name="last_name"
+                                value={pacient.last_name}
+                                onChange={changeData}
                                 variant="outlined"
                                 fullWidth
                                 required
@@ -206,12 +239,12 @@ export default function ImgMediaCard() {
       title= {<Typography variant='h6' className={classes.title}>Consultas</Typography>}
       columns={[
         
-        { title: 'Motivo de consulta', field: 'consult' },
+        { title: 'Motivo de consulta', field: 'description' },
         
-        { title: 'Fecha', field: 'date'},
+        { title: 'Fecha', field: 'created_at'},
         
       ]}
-      data={data}
+      data={pacient.clinical_stories}
       detailPanel={[
         {
           tooltip: 'Mostrar Detalles',
@@ -290,3 +323,16 @@ export default function ImgMediaCard() {
     </div>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    token: state.auth.token
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ImgMediaCard)

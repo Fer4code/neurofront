@@ -51,7 +51,7 @@ export default function Profile (props) {
                       onClick={()=>history.push('/pacientform')}          
                     />
                     <CardActions>
-                    <Button color="secondary" variant="contained" fullWidth>
+                    <Button color="secondary"  onClick={()=>history.push('/pacientform')} variant="contained" fullWidth>
                       Paciente Nuevo
                     </Button>
                   </CardActions>
@@ -75,7 +75,7 @@ export default function Profile (props) {
                                 
                     />
                     <CardActions>
-                    <Button color="secondary" variant="contained" fullWidth>
+                    <Button color="secondary" onClick={()=>history.push('/patientsview')} variant="contained" fullWidth>
                       Mis Historias
                     </Button>
                   </CardActions>
@@ -99,7 +99,7 @@ export default function Profile (props) {
                                 
                     />
                     <CardActions>
-                    <Button color="secondary" variant="contained" fullWidth>
+                    <Button color="secondary" onClick={()=>history.push('/investigation')} variant="contained" fullWidth>
                       Investigación
                     </Button>
                   </CardActions>
@@ -122,7 +122,7 @@ export default function Profile (props) {
                                 
                     />
                     <CardActions>
-                    <Button color="secondary" variant="contained" fullWidth>
+                    <Button color="secondary" onClick={()=>history.push('/examsview')} variant="contained" fullWidth>
                       Examenes
                     </Button>
                   </CardActions>
@@ -144,7 +144,7 @@ export default function Profile (props) {
                       onClick={()=>history.push('/Medsview')}          
                     />
                     <CardActions>
-                    <Button color="secondary" variant="contained" fullWidth>
+                    <Button color="secondary"  onClick={()=>history.push('/Medsview')} variant="contained" fullWidth>
                       Medicamentos
                     </Button>
                   </CardActions>
@@ -167,7 +167,7 @@ export default function Profile (props) {
                       onClick={()=>history.push('/patientsview')}         
                     />
                     <CardActions>
-                    <Button color="secondary" variant="contained" fullWidth>
+                    <Button color="secondary"  onClick={()=>history.push('/patientsview')} variant="contained" fullWidth>
                       Noticias
                     </Button>
                   </CardActions>

@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import axios from '../../axios-instance';
 import { makeStyles } from '@material-ui/core/styles';
 import {Container, Grid} from '@material-ui/core/'
 import Paper from '@material-ui/core/Paper';
@@ -16,32 +18,9 @@ import TextField from "@material-ui/core/TextField";
 
 
 const columns = [
-  { id: 'name', label: 'Nombre', minWidth: 170 },
-  { id: 'consult', label: 'Motivo de consulta', minWidth: 100 },
-  { id: 'date', label: 'Fecha', minWidth: 100 }
-];
-
-function createData(name, consult, date) {
-  
-  return { name, consult, date};
-}
-
-const rows = [
-  createData('Jose Marquez', 'Dolor de cabeza','20/05/2020'),
-  createData('China', 'CN', 1403500365, 9596961),
-  createData('Italy', 'IT', 60483973, 301340),
-  createData('United States', 'US', 327167434, 9833520),
-  createData('Canada', 'CA', 37602103, 9984670),
-  createData('Australia', 'AU', 25475400, 7692024),
-  createData('Germany', 'DE', 83019200, 357578),
-  createData('Ireland', 'IE', 4857000, 70273),
-  createData('Mexico', 'MX', 126577691, 1972550),
-  createData('Japan', 'JP', 126317000, 377973),
-  createData('France', 'FR', 67022000, 640679),
-  createData('United Kingdom', 'GB', 67545757, 242495),
-  createData('Russia', 'RU', 146793744, 17098246),
-  createData('Nigeria', 'NG', 200962417, 923768),
-  createData('Brazil', 'BR', 210147125, 8515767),
+  { id: 'user_id', label: 'Nombre', minWidth: 170 },
+  { id: 'description', label: 'Motivo de consulta', minWidth: 100 },
+  { id: 'created_at', label: 'Fecha', minWidth: 100 }
 ];
 
 const useStyles = makeStyles({
@@ -49,18 +28,34 @@ const useStyles = makeStyles({
     width: '100%',
   },
   cont:{
-    paddingTop: 80,
-    paddingBottom: 80
+    paddingTop: 80
   },
   container: {
     height: '65vh',
   },
 } );
 
-export default function StickyHeadTable() {
+const StickyHeadTable = function(props) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(15);
+  const [clinicalStories, setClinicalStories] = React.useState(null);
+  const [strQuery, setStrQuery] = React.useState('');
+
+  React.useEffect(() => {
+    if (clinicalStories === null) {
+      const config = {
+        headers: { Authorization: "Bearer " + props.token }
+      }
+      axios.get('clinical_stories', config)
+        .then((response) => {
+          setClinicalStories(response.data.data)
+        })
+        .catch((err) => {
+
+        })
+    }
+  })
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -71,19 +66,43 @@ export default function StickyHeadTable() {
     setPage(0);
   };
 
+  const changeQuery = (e) => {
+    setStrQuery(e.target.value)
+  }
+
+  let tableBody = <h4>Cargando datos</h4>
+  if (clinicalStories != null) {
+    tableBody = clinicalStories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    return (
+                      <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                        {columns.map((column) => {
+                          const value = row[column.id];
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.format && typeof value === 'number' ? column.format(value) : value}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })
+  }
+
   return (
     <Container maxWidth='lg' className={classes.cont}>
       
     <Paper className={classes.root}>
     <Grid container spacing={10} wrap='wrap' justify='flex-end' alignItems='stretch'>
     <Grid item xs={7} sm={7}>
-    <Typography variant="h3" gutterBottom color="initial">Historias</Typography>
+    <Typography variant="h3" color="initial">Historias</Typography>
     </Grid>
     <Grid item xs={5} sm={5}>
           <TextField
             id="outlined-search"
             type='search'
             variant="outlined"
+            value={strQuery}
+            onChange={changeQuery}
             fullWidth
             placeholder="Buscar por nombre, motivo de consulta o fecha"
             InputProps={{
@@ -112,28 +131,16 @@ export default function StickyHeadTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === 'number' ? column.format(value) : value}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
+            {tableBody}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[15, 25, 100]}
         component="div"
-        count={rows.length}
+        count={clinicalStories?.length || 0}
         rowsPerPage={rowsPerPage}
+        labelRowsPerPage='Filas por pagina:'
         page={page}
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
@@ -142,3 +149,16 @@ export default function StickyHeadTable() {
     </Container>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    token: state.auth.token
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(StickyHeadTable)

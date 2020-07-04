@@ -27,17 +27,15 @@ export const register = (user) => {
         dispatch(registerStart());
         const newUser = {
             ...user,
-            role: 'doctor',
-            gender: 'male',
-            birth_date: '1984-04-13'
         }
         axios.post('register', newUser)
             .then(response => {
+                console.log("registrado", response.data.data)
                 dispatch(registerSuccess(response.data.data))
             })
             .catch(err => {
+                console.log(err.response.data.errors)
                 dispatch(registerFail(err.response.data.errors))
             })
     }
 }
-  

@@ -1,7 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import axios from '../../axios-instance';
 import { makeStyles, Typography } from '@material-ui/core';
 import MaterialTable from 'material-table';
 import { ReactComponent as Check } from '../icons/check.svg';
+import { ReactComponent as War } from '../icons/warning.svg';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -30,14 +33,56 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function MedTable() {
+const  MedTable = function(props) {
   const classes = useStyles(); 
   const { useState } = React;
-  
 
-  const [data, setData] = useState([
-    { name: 'Acetaminofen', practive: 'Paracetamol', lab: 'Calox', presentation: 'Tabletas', administration:'Oral', created: '20/02/2020', description: 'text' },
-  ]);
+  const [meds, setMeds] = React.useState(null)
+  const [newMed, setNewMed] = React.useState({
+    nombre: '',
+    principio_activo: '',
+    laboratorio: '',
+    presentacion: ''
+  })
+
+  const config = {
+    headers: { Authorization: "Bearer " + props.token }
+  }
+
+  React.useEffect(() => {
+    if (meds === null) {
+      axios.get('medicine_types', config)
+        .then((response) => {
+          console.log(response.data.data)
+          setMeds(response.data.data)
+        })
+        .catch((err) => {
+
+        })
+    }
+  })
+  
+  const handleSubmit = () => {
+    axios.post('medicine_types', newMed, config)
+    .then((response) => {
+      console.log(response.data)
+    })
+    .catch((err) => {
+      console.log(err.data)
+    })
+  }
+
+  const changeNewMed = (e) => {
+    setNewMed({
+      ...newMed,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  let medsList = []
+  if (meds != null) {
+    medsList = meds
+  }
 
   return (
     <div className={classes.root}>
@@ -45,15 +90,13 @@ export default function MedTable() {
       <MaterialTable className={classes.table} 
       title= {<Typography variant='h6' className={classes.title}>Medicamentos</Typography>}
       columns={[        
-        { title: 'Nombre', field: 'name' },
-        { title: 'Comp Activo', field: 'practive' },
-        { title: 'Presentacion', field: 'presentation' },
-        { title: 'Laboratorio', field: 'lab' },        
-        { title: 'Administracion', field: 'administration' },        
-        { title: 'Creado', field: 'created'},
+        { title: 'Nombre', field: 'nombre' },
+        { title: 'Comp Activo', field: 'principio_activo' },
+        { title: 'Presentacion', field: 'presentacion' },
+        { title: 'Laboratorio', field: 'laboratorio' },       
         
       ]}
-      data={data}
+      data={medsList}
       detailPanel={[
         {
           tooltip: 'Mostrar detalles',
@@ -95,6 +138,7 @@ export default function MedTable() {
           lastTooltip: 'Final',
           nextTooltip: 'Siguiente pagina',
           previousTooltip: 'Pagina anterior'
+          
         },
     }}
       actions={[
@@ -130,3 +174,16 @@ export default function MedTable() {
     </div>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    token: state.auth.token
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MedTable)
