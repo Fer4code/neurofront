@@ -27,10 +27,9 @@ const useStyles = makeStyles({
   },
   container: {
     backgroundColor: "grey",
-    margin: 25,
-    borderRadius: '0.5rem'
+    margin: 25
   },
-  pacient:{
+  news:{
     margin: 25
   },
   icon: {
@@ -43,33 +42,35 @@ const useStyles = makeStyles({
     },
   },
   button: {
-    marginTop: 10,
+    margin: 1,
   },
- 
+  search: {
+    marginRight: 1,
+  }
 });
 
 const ImgMediaCard = function(props) {
   const classes = useStyles();
 
-  const [pacients, setPacients] = React.useState(null)
+  const [news, setNews] = React.useState(null)
 
   const [searchParams, setSearchParams] = React.useState({
     stringSearch: null,
-    minimumData: null,
+    minimumDate: null,
     maximumDate: null
   })
   const [strSearch, setStrSearch] = React.useState('')
   const [selectedDate, setSelectedDate] = React.useState(new Date('2020-01-01T21:11:54'));
-  const [selectedDateu, setSelectedDateu] = React.useState(Date());
+  const [selectedDateu, setSelectedDateu] = React.useState(new Date());
 
   React.useEffect(() => {
-    if (pacients === null) {
+    if (news === null) {
       const config = {
         headers: { Authorization: "Bearer " + props.token }
       }
-      axios.get('pacients', config)
+      axios.get('news', config)
         .then((response) => {
-          setPacients(response.data.data)
+          setNews(response.data.data)
         })
         .catch((err) => {
 
@@ -89,40 +90,56 @@ const ImgMediaCard = function(props) {
 
   const changeParams = () => {
     setSearchParams({
-      stringSearch: strSearch
+      stringSearch: strSearch,
+      minimumDate: selectedDate,
+      maximumDate: selectedDateu
     })
   }
-  let pacientsList = <h2>Oops! Parece que no tienes pacientes registrados hasta ahora</h2>
-  if(pacients != null) {
-    pacientsList = pacients.map((pacient) => {
-      let matches = true;
+  let newsList = <h2>0 noticias</h2>
+  if(news != null) {
+    newsList = news.map((news) => {
+      let matchesString = true;
       if(searchParams.stringSearch != null) {
-        const lowercaseFirstName = pacient.first_name.toLowerCase()
-        const lowercaseLastName = pacient.last_name.toLowerCase()
-        matches = lowercaseFirstName.includes(searchParams.stringSearch) || lowercaseLastName.includes(searchParams.stringSearch)
+        const lowercaseFirstName = news.title.toLowerCase()
+        const lowercaseLastName = news.abstract.toLowerCase()
+        matchesString = lowercaseFirstName.includes(searchParams.stringSearch) || lowercaseLastName.includes(searchParams.stringSearch)
       }
-      console.log(matches)
-      if (matches) {
+      let matchesDate = true;
+      if(searchParams.minimumDate != null) {
+        const newsDate = new Date(news.created_at)
+        matchesDate = searchParams.minimumDate.getTime() < newsDate.getTime() && newsDate.getTime() < searchParams.maximumDate.getTime()
+      }
+      if (matchesString && matchesDate) {
         return (
-          <Grid item xl={3} lg={3} md={3} sm={6} xs={6} key={pacient.id}>
+          <Grid item xl={3} lg={3} md={3} sm={6} xs={6} key={news.id}>
           <Card className={classes.root}>
             <CardActionArea>
               <CardMedia
                 component="img"
                 alt="Contemplative Reptile"
                 height="140"
-                image={pacient.img_url}
+                image={news.img_url}
                 title="Contemplative Reptile"
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
-                  {pacient.first_name + " " + pacient.last_name}
+                    <a href={news.link} target="_blank">
+                    {news.title}
+                    </a>
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                  {pacient.marital_status + " " + pacient.blood_type + " " + pacient.gender }
+                  {news.abstract }
                 </Typography>
               </CardContent>
             </CardActionArea>
+            <CardActions>
+              {/* <Button size="small" color="primary">
+                Share
+              </Button>
+              <Button size="small" color="primary">
+                Learn More
+              </Button> */}
+            </CardActions>
           </Card>
         </Grid>
         )
@@ -134,25 +151,18 @@ const ImgMediaCard = function(props) {
 
   return (
     <div>
-      <Grid container  spacing={1} direction='row' alignItems="flex-start" justify="flex-start">
-      <Grid item xs={11} sm={11}><Typography variant="h3" color="initial">Pacientes</Typography></Grid>
-      <Grid item xs={1} sm={1}>
-        <PersonAddIcon 
-        fontSize= 'large' 
-        onClick={event =>  window.location.href='/pacientform'}
-        className={classes.icon}
-        alt='Agregar paciente'
-        />
-        </Grid>      
+      <Grid container  spacing={2} direction='row' alignItems="flex-start" justify="flex-start">
+      <Grid item xs={11} sm={11}><Typography variant="h3" color="initial">Noticias</Typography></Grid>
+         
       </Grid>
       <Grid container  spacing={2} direction='row' alignItems="flex-start" justify="flex-start" className={classes.container}>
-        <Grid item lg={6} xs={12} sm={12}>
+        <Grid item xs={12} sm={12}>
           <TextField
             id="outlined-search"
             type='search'
             variant="outlined"
             fullWidth
-            placeholder="Buscar por nombre, apellido o diagnostico"
+            placeholder="Buscar por titulo o descripcion"
             value={strSearch}
             onChange={handleStrChange}
             InputProps={{
@@ -164,7 +174,7 @@ const ImgMediaCard = function(props) {
             }}
           />
         </Grid>
-        <Grid item lg={2} xs={6} sm={6}>
+        <Grid item xs={6} sm={6}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                 autoOk
@@ -181,7 +191,7 @@ const ImgMediaCard = function(props) {
               />
                 </MuiPickersUtilsProvider>
         </Grid>
-        <Grid item lg={2} xs={6} sm={6}>
+        <Grid item xs={6} sm={6}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
               orientation='landscape'
@@ -199,27 +209,29 @@ const ImgMediaCard = function(props) {
             />
               </MuiPickersUtilsProvider>
         </Grid>
-        <Grid item align='center' lg={2} xs={2} sm={2} >
-                  <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  endIcon={<Icon>search</Icon>}
-                  fullWidth
-                  onClick={changeParams}
-                >
-                  Buscar
-                </Button>
-              </Grid>
+        <Grid container spacing={2} direction='row' alignItems="center" justify="flex-end" >
+        <Grid item xs={2} sm={2} className={classes.search}>
+        <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        endIcon={<Icon>search</Icon>}
+        fullWidth
+        onClick={changeParams}
+      >
+        Buscar
+      </Button>
+      </Grid>
         </Grid>
+    </Grid>
     <Grid
       container
       spacing={2}
       direction="row"
       alignItems="flex-start" justify="flex-start"
-      className={classes.pacient}
+      className={classes.news}
     >
-      { pacientsList }
+      { newsList }
       
     </Grid>
     </div>

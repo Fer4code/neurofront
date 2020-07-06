@@ -77,7 +77,7 @@ const PersonalDataArea = React.memo((props) => {
                     fullWidth
                     label="Profesion"
                     type="input"
-                    variant='outlined   '
+                    variant='outlined'
                     
                     />
                 </Grid>

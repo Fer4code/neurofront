@@ -61,7 +61,7 @@ export const auth = (email, password) => {
                 dispatch(authSuccess(response.data.access_token, response.data.user));
             })
             .catch(err => {
-                dispatch(authFail(err));
+                dispatch(authFail(err.response.data.errors));
             });
     };
 };
@@ -75,7 +75,7 @@ export const retrieveUserInfo = (token, userId) => {
                 dispatch(authSuccess(token, response.data.data));
             })
             .catch(err => {
-                dispatch(authFail(err.response.data.errors));
+               console.log('retrieve');
             });
     };
 };

@@ -1,0 +1,18 @@
+<Typography variant="subtitle2" color="initial">Área de estudio</Typography>
+                        <Autocomplete
+                          multiple
+                          id="tags-outlined"
+                          options={top100Films}
+                          getOptionLabel={(option) => option.title}
+                          defaultValue={[top100Films[0]]}
+                          filterSelectedOptions
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              variant="outlined"
+                             
+                              placeholder="Área de estudio"
+                            />
+                          )}
+                        />
+                        </Grid>

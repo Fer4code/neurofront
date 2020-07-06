@@ -11,6 +11,10 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import GenderPicker from '../../../components/UI/Pickers/GenderPicker/GenderPicker'
+
 
 import * as actions from '../../../store/actions/index';
 
@@ -63,12 +67,8 @@ class Register extends Component {
     first_name: '',
     last_name: '',
     role: '',
-    title: '',
     document: '',
-    college_number: '',
-    doctor_number: '',
     gender: '',
-    img_url: '',
   }
     onChange = (e) => {
       this.setState({ [e.target.name]: e.target.value })
@@ -91,7 +91,21 @@ class Register extends Component {
         if(this.props.registrationCompleted) {
           authRedirect = <Redirect to={"/registration-completed"} />
         }
-        
+
+        const handleClose = () => {
+          this.setState({ generoOpen: false})
+        };
+
+        const handleOpen = () => {
+          this.setState({ generoOpen: true})
+        };
+        const handleCloseRole = () => {
+          this.setState({ roleOpen: false})
+        };
+
+        const handleOpenRole = () => {
+          this.setState({ roleOpen: true})
+        };
         return (
               <Container component="main" maxWidth="sm" className={classes.paper}>
              <CssBaseline />     
@@ -155,72 +169,101 @@ class Register extends Component {
                         </Grid>
                         <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                         <Typography variant="subtitle2" color="initial">Genero</Typography>
-                        <TextField
-                                id="gen"
-                                value={this.state.gender}
-                                onChange={this.onChange}
-                                type="text"
-                                htmlFor="name"
-                                name="gender"
-                                fullWidth
-                                variant="outlined"
-                                required
-                                autoComplete="true"
-                                autoCapitalize="true"
-                                size="small"
-                                placeholder="Elija su genero"
-                                error={Boolean(this.props.errors?.gender)}
-                                helperText={this.props.errors?.gender ? this.props.errors?.gender[0] : ""}
-                                />
+                        <TextField className="csex"
+                          id="gender"
+                          name="gender"
+                          required
+                          select
+                          fullWidth
+                          value={this.state.gender}
+                          onChange={this.onChange}
+                          error={Boolean(this.props.errors?.gender)}
+                          helperText={this.props.errors?.gender ? this.props.errors?.gender[0] : ""}        
+                        >
+                            <MenuItem value={"m"}>
+                              {"Masculino"}
+                            </MenuItem>
+                            <MenuItem value={"f"}>
+                              {"Femenino"}
+                            </MenuItem>
+                        
+                        </TextField>
+                          {/* <Select
+                            labelId="demo-controlled-open-select-label"
+                            id="demo-controlled-open-select"
+                            name="gender"
+                            open={this.state.generoOpen}
+                            onClose={handleClose}
+                            onOpen={handleOpen}
+                            value={this.state.gender}
+                            onChange={this.onChange}
+                            error={Boolean(this.props.errors?.gender)}
+                            helperText={this.props.errors?.gender ? this.props.errors?.gender[0] : ""}
+                          >
+                            <MenuItem value={"m"}>Masculino</MenuItem>
+                            <MenuItem value={"f"}>Femenino</MenuItem>
+                          </Select> */}
                         </Grid>
                         <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                        <Typography variant="subtitle2" color="initial">Titulo</Typography>
+                        <Typography variant="subtitle2" color="initial">Cedula</Typography>
                         <TextField
                                 id="title"
-                                value={this.state.title}
+                                value={this.state.document}
                                 onChange={this.onChange}
                                 type="text"
                                 htmlFor="name"
-                                name="title"
+                                name="document"
                                 fullWidth
                                 variant="outlined"
                                 required
                                 autoComplete="true"
                                 autoCapitalize="true"
                                 size="small"
-                                placeholder="Indique su titulo"
-                                error={Boolean(this.props.errors?.title)}
-                                helperText={this.props.errors?.title ? this.props.errors?.title[0] : ""}
+                                placeholder="Indique su document"
+                                error={Boolean(this.props.errors?.document)}
+                                helperText={this.props.errors?.document ? this.props.errors?.document[0] : ""}
                                 />
                         </Grid>
                         <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                        <Typography variant="subtitle2" color="initial">Area de estudio</Typography>
+                        <Typography variant="subtitle2" color="initial">Área de estudio</Typography>
                         <Autocomplete
                           multiple
                           size='small'
                           id="tags-filled"
                           variant='outlined'
-                          freeSolo                                
+                          options={top100Films.map((option) => option.title)}
+                          freeSolo
+                          renderTags={(value, getTagProps) =>
+                            value.map((option, index) => (
+                              <Chip color='primary' label={option} {...getTagProps({ index })} />
+                            ))
+                          }        
                           renderInput={(params) => (
-                            <TextField {...params} variant="outlined" placeholder="Area de estudio" />
+                            <TextField {...params} variant="outlined" placeholder="Área de estudio" />
                           )}
                         />
                         </Grid>
                         <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                        <Typography variant="subtitle2" color="initial">Numero del colegio de medico</Typography>
-                        <TextField
-                                id="title"
-                                value={this.state.college_number}
-                                onChange={this.onChange}
-                                htmlFor="number"
-                                name="college_number"
-                                fullWidth
-                                variant="outlined"
-                                required
-                                autoComplete="true"
-                                size="small"
-                                placeholder="Numero de colegio de medico"
-                                />
+                        <Typography variant="subtitle2" color="initial">Tipo de usuario</Typography>
+                        <TextField className="csex"
+                          id="gender"
+                          name="role"
+                          required
+                          select
+                          fullWidth
+                          value={this.state.role}
+                          onChange={this.onChange}
+                          error={Boolean(this.props.errors?.role)}
+                          helperText={this.props.errors?.role ? this.props.errors?.role[0] : ""}  
+                        >
+                            <MenuItem value={"Estudiante"}>Estudiante</MenuItem>
+                            <MenuItem value={"Medico"}>Medico</MenuItem>
+                            <MenuItem value={"Medico Especialista"}>Medico Especialista</MenuItem>
+                            <MenuItem value={"Doctor"}>Doctor</MenuItem>
+                            <MenuItem value={"Investigador"}>Investigador</MenuItem>
+                        
+                        </TextField>
+                            
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                         <Typography variant="subtitle2" color="initial">Usuario</Typography>
@@ -311,6 +354,10 @@ class Register extends Component {
         )
     }
 }
+
+const top100Films = [
+  { title: 'Neurología', year: 1994 }
+]
 
 const mapStateToProps = state => {
   return {

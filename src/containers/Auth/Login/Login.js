@@ -100,7 +100,7 @@ class Login extends Component {
                   size='small'
                   placeholder="Correo electronico"
                   error={this.props.error == "Recurso no encontrado" ? this.props.error : null}
-                  helperText={this.props.error == "Recurso no encontrado" ? "Correo invalido" : null}
+                  helperText={this.props.error == "Recurso no encontrado" ? "Correo incorrecto o no registrado" : null}
                 />
               </Grid>
               <Grid className={classes.paper} Item xl={12} lg={12} md={12} sm={12} xs={12}>

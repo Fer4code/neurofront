@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import axios from '../../axios-instance';
 import { makeStyles, Typography } from '@material-ui/core';
 import MaterialTable from 'material-table';
 import { ReactComponent as Check } from '../icons/check.svg';
@@ -30,14 +32,36 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function ExamTable() {
+const ExamTable = function(props) {
   const classes = useStyles(); 
   const { useState } = React;
+  const [exams, setExams] = React.useState(null)
+  const [newExam, setNewExam] = React.useState({
+    name: '',
+    description: ''
+  })
+
+  const config = {
+    headers: { Authorization: "Bearer " + props.token }
+  }
+
+  React.useEffect(() => {
+    if (exams === null) {
+      axios.get('exam_types', config)
+        .then((response) => {
+          setExams(response.data.data)
+        })
+        .catch((err) => {
+
+        })
+    }
+  })
  
 
-  const [data, setData] = useState([
-    { name: 'Tomografia', created: '20/02/2020', description: 'text' },
-  ]);
+  let examsList = []
+  if (exams != null) {
+    examsList = exams
+  }
 
   return (
     <div className={classes.root}>
@@ -47,10 +71,10 @@ export default function ExamTable() {
         
         { title: 'Nombre', field: 'name' },
         
-        { title: 'Creado', field: 'created'},
+        { title: 'Descripcion', field: 'description'},
         
       ]}
-      data={data}
+      data={examsList}
       detailPanel={[
         {
           tooltip: 'Mostrar Detalles',
@@ -127,3 +151,16 @@ export default function ExamTable() {
     </div>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    token: state.auth.token
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExamTable)

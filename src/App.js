@@ -20,13 +20,16 @@ import Adexams from './containers/Admin/Adexams'
 import Adant from './containers/Admin/Adant'
 import Admedicamentos from './containers/Admin/Admedicamentos'
 import Adalergies from './containers/Admin/Adalergies'
+import Adstatics from './containers/Admin/Adstatics'
 import Adnews from './containers/Admin/Adnews'
 import Examsview from './containers/User/Examsview'
 import Histories from './containers/User/Histories'
 import Patientsview from './containers/User/Patientsview'
 import Patientview from './containers/User/Patientview'
 import Medsview from './containers/User/Medsview'
+import Newsview from './containers/User/Newsview'
 import Investigation from './containers/User/Investigation'
+import Caseview from './containers/User/Caseview'
 
 import * as actions from './store/actions/index';
 import {light} from './theme'
@@ -38,6 +41,7 @@ class App extends Component {
     const userId = localStorage.getItem('userId')
     console.log(userId)
     if( userId && !this.props.userId) {
+      console.log('llamada')
       const token = localStorage.getItem('accessToken')
       this.props.retrieveUserInfo(token, userId)
     }
@@ -55,6 +59,7 @@ class App extends Component {
             <Route exact path="/register" component={Register}/>
             <Route exact path="/registration-completed" component={PostRegister}/>
             <Route exact path="/login" component={Login}/>
+            <Route exact path="/Adstatics" component={Adstatics}/>
           <Container maxWidth='lg'>
             <Route exact path="/profile" component={Profile}/>
             <Route exact path="/pacientform" component={PacientForm}/>
@@ -71,8 +76,10 @@ class App extends Component {
             <Route exact path="/Patientsview" component={Patientsview}/>
             <Route exact path="/Patientview" component={Patientview}/>
             <Route exact path="/Histories" component={Histories}/>
+            <Route exact path="/Newsview" component={Newsview}/>
             <Route exact path="/Medsview" component={Medsview}/>
             <Route exact path="/Investigation" component={Investigation}/>
+            <Route exact path="/Caseview" component={Caseview}/>
             </Container>
         </div>
       </Router>
