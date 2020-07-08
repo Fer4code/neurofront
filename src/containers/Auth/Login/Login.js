@@ -29,7 +29,7 @@ const useStyles = theme => ({
     form: {
       width: '100%', // Fix IE 11 issue.
       marginTop: theme.spacing(14),
-      background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+      background: 'linear-gradient(45deg, #29C7D9 30%, #2EF2F2 90%)',
       borderRadius: '0.5rem'
     },
     submit: {
@@ -60,6 +60,9 @@ class Login extends Component {
     onSubmit = (e) => {
         e.preventDefault()
         this.props.onAuth( this.state.email, this.state.password)
+    }
+    redir = (e) =>{
+      this.props.history.push('/register')
     }
     render() {
         const { classes } = this.props;
@@ -123,11 +126,14 @@ class Login extends Component {
                 />
               </Grid>
               <Button className={classes.submit} variant="contained" type="submit" color='inherit' fullWidth >
-                Iniciar Sesión
+                Ingresar
               </Button>
-              <Link to={"/register"}>
-              <Typography variant="caption" gutterBottom color="initial">Aún no tienes cuenta? Crea una cuenta para ti</Typography>
-              </Link>
+              
+              <Typography variant="subtitle2" style={{marginTop: 8}}color="initial">Aún no tienes cuenta?</Typography>
+              <Button variant="outlined" style={{margin: 4}} size='small' onClick={this.redir} color="default">
+                Registrate
+              </Button>
+              
               
               </Grid>
             </form>

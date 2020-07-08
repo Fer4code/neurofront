@@ -1,4 +1,6 @@
 import React, {useState} from 'react';
+import { connect } from 'react-redux';
+import axios from '../../axios-instance';
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
 import {Card, Grid, ClickAwayListener, Box, Container, CssBaseline} from '@material-ui/core/';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -14,6 +16,7 @@ import Chip from '@material-ui/core/Chip';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Slider from '@material-ui/core/Slider';
 import Paper from '@material-ui/core/Paper'
+import * as actions from '../../store/actions/index';
 import {
   Search as SearchIcon,
   CloseOutlined as CloseOutlinedIcon
@@ -22,6 +25,33 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+
+const estados = [
+  "Amazonas",
+  "Anzoátegui",
+  "Apure",
+  "Aragua",
+  "Barinas",
+  "Bolívar",
+  "Carabobo",
+  "Cojedes",
+  "Delta Amacuro",
+  "Falcón",
+  "Guárico",
+  "Lara",
+  "Mérida",
+  "Miranda",
+  "Monagas",
+  "Nueva Esparta",
+  "Portuguesa",
+  "Sucre",
+  "Táchira",
+  "Trujillo",
+  "Vargas",
+  "Yaracuy",
+  "Zulia",
+  "Distrito Capital"
+]
 
 
 const useStyles = makeStyles((theme) => ({
@@ -72,7 +102,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ImgMediaCard({onSearchClose}) {
+const ImgMediaCard = function (props) {
+  React.useEffect(() => {
+    if(props.countryData.length == 0) {
+      props.onInitFormData();
+      
+    }
+    if ( clinicalStories === null) {
+      const config = {
+        headers: { Authorization: "Bearer " + props.token }
+      }
+      axios.get('clinical_stories', config)
+        .then((response) => {
+          setClinicalStories(response.data.data)
+        })
+        .catch((err) => {
+          console.log(err.response)
+        })
+    }
+  })
   const classes = useStyles();
   const theme = useTheme();
   const [selectedDate, setSelectedDate] = React.useState(new Date('2020-01-01T21:11:54'));
@@ -80,8 +128,23 @@ export default function ImgMediaCard({onSearchClose}) {
   const [isFocussed, setFocussed] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isShowingToast, showToast] = useState(false);
-  
+  const top100Films = [{title: ""}]
   const [selectedDateu, setSelectedDateu] = React.useState(Date());
+  const [location, setLocation] = React.useState([])
+  const [parameters, setParameters] = React.useState([])
+  const [diagnosis, setDiagnosis] = React.useState('')
+  const [clinicalStories, setClinicalStories] = React.useState(null)
+
+  
+
+  const [searchParams, setSearchParams] = React.useState({
+    location: [],
+    minimumData: null,
+    maximumDate: null,
+    ageRange: null,
+    parameters: [],
+    diagnosis: null
+  })
 
   const handleFrom = (date) => {
     setSelectedDate(date);
@@ -128,19 +191,19 @@ export default function ImgMediaCard({onSearchClose}) {
     },
   })(Slider);
     
-  const onSearchCancel = () => {
-    setSearchTerm("");
-    setFocussed(false);
-    onSearchClose();
-  };
-  const onSearch = (event) => {
-    setFocussed(true);
-    if (event.key === "Enter") {
-      showToast(true);
-      setFocussed(false);
-      onSearchClose();
-    }
-  }
+  // const onSearchCancel = () => {
+  //   setSearchTerm("");
+  //   setFocussed(false);
+  //   onSearchClose();
+  // };
+  // const onSearch = (event) => {
+  //   setFocussed(true);
+  //   if (event.key === "Enter") {
+  //     showToast(true);
+  //     setFocussed(false);
+  //     onSearchClose();
+  //   }
+  // }
   const onFocusLoss = (event) => {
     setFocussed(false);
     if (event.key === "Enter", "Tab") {
@@ -150,8 +213,124 @@ export default function ImgMediaCard({onSearchClose}) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  
 
+  const changeParams = () => {
+    setSearchParams({
+      location: location,
+      minimumData: selectedDate,
+      maximumDate: selectedDateu,
+      ageRange: value,
+      parameters: parameters,
+      diagnosis: diagnosis
+    })
+  }
+
+  const handleSetDiagnosis = (e) => {
+    setDiagnosis(e.target.value)
+
+  }
+
+  let clinicalStoriesList = <h2>0 historias</h2>
+  if(clinicalStories != null) {
+    clinicalStoriesList = clinicalStories.map((clinicalStory) => {
+      let matches1 = true
+      let matches2 = true
+      let matches3 = true
+      let matches4 = true
+      let matches5 = true
+      let matches6 = true
+      if(searchParams.diagnosis) {
+        matches1 = matches1 && (clinicalStory.diagnosis?.includes(searchParams.diagnosis))
+      }
+      if(searchParams.ageRange) {
+        matches2 = matches2 && (clinicalStory.edad_paciente > searchParams.ageRange[0] && clinicalStory.edad_paciente < searchParams.ageRange[1])
+      }
+      if(searchParams.minimumData) {
+        const created_at = new Date(clinicalStory.created_at)
+        const minData = new Date(searchParams.minimumData)
+        console.log(created_at.getTime() > minData.getTime())
+        matches3 = matches3 && (created_at.getTime() > minData.getTime())
+      }
+      if(searchParams.maximumDate) {
+        const created_at = new Date(clinicalStory.created_at)
+        const maxData = new Date(searchParams.maximumDate)
+        matches4 = matches4 && (created_at.getTime() < maxData.getTime())
+      }
+      if(searchParams.location.length > 0) {
+        let start = false
+        searchParams.location.forEach(loc => {
+          const municipality_id = clinicalStory.pacient.direction.municipality_id
+          const state_id = clinicalStory.pacient.direction.municipality.state_id
+          console.log(loc.id, municipality_id, state_id) 
+          start = start || (loc.id == municipality_id || loc.id == state_id)
+        })
+        matches5 = start
+      }
+      if(searchParams.parameters.length > 0) {
+        let start = false
+        console.log(clinicalStory)
+        searchParams.parameters.forEach(pam => {
+          // if (clinicalStory.pacient.personal_backgrounds) {
+          //   clinicalStory.pacient.personal_backgrounds.forEach(pb => {
+          //     console.log(pam.name, pb.name)
+          //     start = start || pam.name == pb.name
+          //   })
+          // }
+          // if (clinicalStory.pacient.family_backgrounds) {
+          //   clinicalStory.pacient.family_backgrounds.forEach(fb => {
+          //     console.log(pam.name, fb.name)
+          //     start = start || pam.name == fb.name
+          //   })
+          // }
+          if (clinicalStory.symptoms) {
+            clinicalStory.symptoms.forEach(symp => {
+              console.log(pam.name, symp.name)
+              start = start || pam.name == symp.name
+            })
+          }
+    
+        })
+        matches6 = start
+      }
+      if (matches1 && matches2 && matches3 && matches4 && matches5 && matches6) {
+        return (
+          <Grid item xl={3} lg={3} md={3} sm={6} xs={6} key={clinicalStory.id}>
+          <Card className={classes.root}>
+            <CardActionArea>
+              <CardMedia
+                component="img"
+                alt="Contemplative Reptile"
+                height="140"
+                image={clinicalStory.pacient.img_url}
+                title="Contemplative Reptile"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {clinicalStory.description}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {clinicalStory.pacient.first_name + " " + clinicalStory.pacient.last_name}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            <CardActions>
+              <Button size="small" color="primary">
+                Share
+              </Button>
+              <Button size="small" color="primary">
+                Learn More
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+        )
+      } else {
+        return null
+      }
+    })
+  }
+
+  
   return (
     <Container component="main" maxWidth="false" className={classes.paper}>
       <CssBaseline />
@@ -168,12 +347,13 @@ export default function ImgMediaCard({onSearchClose}) {
         multiple
         id="tags-filled"
         variant='outlined'
-        options={top100Films.map((option) => option.title)}
-        defaultValue={[top100Films[13].title]}
+        getOptionLabel={(option) => option.country_name || option.name}
+        options={[...props.countryData, ...props.stateData, ...props.municipalityData]}
+        onChange={(event, value) => setLocation(value)}
         freeSolo
         renderTags={(value, getTagProps) =>
           value.map((option, index) => (
-            <Chip color='secondary' label={option} {...getTagProps({ index })} />
+            <Chip color='secondary' label={ option.country_name || option.name} {...getTagProps({ index })} />
           ))
         }        
         renderInput={(params) => (
@@ -218,7 +398,7 @@ export default function ImgMediaCard({onSearchClose}) {
             />
               </MuiPickersUtilsProvider>
         </Grid>
-        <Grid item xs={8} sm={8}>
+        <Grid item xs={6} sm={6}>
         <ClickAwayListener onClick={() => setFocussed(true)} onClickAway={onFocusLoss}>
         <Box
         className={classes.search}
@@ -234,8 +414,14 @@ export default function ImgMediaCard({onSearchClose}) {
         <Autocomplete
         multiple
         id="tags-outlined"
-        options={top100Films}
-        getOptionLabel={option => option.title}
+        options={[...props.symptomData, ...props.backgroundData]}
+        getOptionLabel={option => {
+          if (option.name2) {
+            return option.name2
+          }
+          return option.name
+        }}
+        onChange={(event, value) => setParameters(value)}
         filterSelectedOptions
         fullWidth
         ChipProps={{color:'primary'}}
@@ -245,7 +431,7 @@ export default function ImgMediaCard({onSearchClose}) {
             multiple
             {...params}
             onClick={() => setFocussed(true)}
-            placeholder="Ingrese sintomas, antecedentes o diagnosticos"
+            placeholder="Ingrese sintomas o antecedentes"
             InputProps={{...params.InputProps, disableUnderline: true,   }}
             
           />
@@ -256,7 +442,22 @@ export default function ImgMediaCard({onSearchClose}) {
       </ClickAwayListener>
       
         </Grid>
-        <Grid item alignItems='flex-end' xs={4} sm={4}>
+        <Grid xs={3} sm={3}>
+        <TextField
+            autoComplete=""
+            name="diagnosis"
+            variant="outlined"
+            multiline
+            rows={4}
+            fullWidth
+            rowsMax="10"
+            id="fisical_exam"
+            label="Ingrese diagnostico"
+            value={diagnosis}
+            onChange={handleSetDiagnosis}
+          />
+        </Grid>
+        <Grid item alignItems='flex-end' xs={3} sm={3}>
                 <Paper elevation={0} variant="outlined" className={classes.slider}>
                 <PrettoSlider aria-label="pretto slider" defaultValue={value} valueLabelDisplay='on' onChangeCommitted={handleChange} />
                 <Typography align='center'>Grupo Etareo</Typography>
@@ -270,6 +471,7 @@ export default function ImgMediaCard({onSearchClose}) {
         className={classes.button}
         endIcon={<Icon fontSize='large'>search</Icon>}
         fullWidth
+        onClick={changeParams}
       >
         <Typography variant='h6'>Buscar</Typography>
       </Button>
@@ -283,379 +485,28 @@ export default function ImgMediaCard({onSearchClose}) {
       alignItems="flex-start" justify="flex-start"
       className={classes.pacient}
     >
-      <Grid item xl={3} lg={3} md={3} sm={6} xs={6}>
-        <Card className={classes.root}>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              alt="Contemplative Reptile"
-              height="140"
-              image="/static/images/cards/contemplative-reptile.jpg"
-              title="Contemplative Reptile"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                across all continents except Antarctica
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <Button size="small" color="primary">
-              Share
-            </Button>
-            <Button size="small" color="primary">
-              Learn More
-            </Button>
-          </CardActions>
-        </Card>
-      </Grid>
-      <Grid item xl={3} lg={3} md={3} sm={6} xs={6}>
-        <Card className={classes.root}>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              alt="Contemplative Reptile"
-              height="140"
-              image="/static/images/cards/contemplative-reptile.jpg"
-              title="Contemplative Reptile"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                across all continents except Antarctica
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <Button size="small" color="primary">
-              Share
-            </Button>
-            <Button size="small" color="primary">
-              Learn More
-            </Button>
-          </CardActions>
-        </Card>
-      </Grid>
-      <Grid item xl={3} lg={3} md={3} sm={6} xs={6}>
-        <Card className={classes.root}>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              alt="Contemplative Reptile"
-              height="140"
-              image="/static/images/cards/contemplative-reptile.jpg"
-              title="Contemplative Reptile"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                across all continents except Antarctica
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <Button size="small" color="primary">
-              Share
-            </Button>
-            <Button size="small" color="primary">
-              Learn More
-            </Button>
-          </CardActions>
-        </Card>
-      </Grid>
-      <Grid item xl={3} lg={3} md={3} sm={6} xs={6}>
-        <Card className={classes.root}>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              alt="Contemplative Reptile"
-              height="140"
-              image="/static/images/cards/contemplative-reptile.jpg"
-              title="Contemplative Reptile"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                across all continents except Antarctica
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <Button size="small" color="primary">
-              Share
-            </Button>
-            <Button size="small" color="primary">
-              Learn More
-            </Button>
-          </CardActions>
-        </Card>
-      </Grid>
-      <Grid item xl={3} lg={3} md={3} sm={6} xs={6}>
-        <Card className={classes.root}>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              alt="Contemplative Reptile"
-              height="140"
-              image="/static/images/cards/contemplative-reptile.jpg"
-              title="Contemplative Reptile"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                across all continents except Antarctica
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <Button size="small" color="primary">
-              Share
-            </Button>
-            <Button size="small" color="primary">
-              Learn More
-            </Button>
-          </CardActions>
-        </Card>
-      </Grid>
-      <Grid item xl={3} lg={3} md={3} sm={6} xs={6}>
-        <Card className={classes.root}>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              alt="Contemplative Reptile"
-              height="140"
-              image="/static/images/cards/contemplative-reptile.jpg"
-              title="Contemplative Reptile"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                across all continents except Antarctica
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <Button size="small" color="primary">
-              Share
-            </Button>
-            <Button size="small" color="primary">
-              Learn More
-            </Button>
-          </CardActions>
-        </Card>
-      </Grid>
-      <Grid item xl={3} lg={3} md={3} sm={6} xs={6}>
-        <Card className={classes.root}>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              alt="Contemplative Reptile"
-              height="140"
-              image="/static/images/cards/contemplative-reptile.jpg"
-              title="Contemplative Reptile"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                across all continents except Antarctica
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <Button size="small" color="primary">
-              Share
-            </Button>
-            <Button size="small" color="primary">
-              Learn More
-            </Button>
-          </CardActions>
-        </Card>
-      </Grid>
-      <Grid item xl={3} lg={3} md={3} sm={6} xs={6}>
-        <Card className={classes.root}>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              alt="Contemplative Reptile"
-              height="140"
-              image="/static/images/cards/contemplative-reptile.jpg"
-              title="Contemplative Reptile"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                across all continents except Antarctica
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <Button size="small" color="primary">
-              Share
-            </Button>
-            <Button size="small" color="primary">
-              Learn More
-            </Button>
-          </CardActions>
-        </Card>
-      </Grid>
-      <Grid item xl={3} lg={3} md={3} sm={6} xs={6}>
-        <Card className={classes.root}>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              alt="Contemplative Reptile"
-              height="140"
-              image="/static/images/cards/contemplative-reptile.jpg"
-              title="Contemplative Reptile"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                across all continents except Antarctica
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <Button size="small" color="primary">
-              Share
-            </Button>
-            <Button size="small" color="primary">
-              Learn More
-            </Button>
-          </CardActions>
-        </Card>
-      </Grid>
+      {clinicalStoriesList}
     </Grid>
     </Container>
   );
 }
-const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-    { title: 'Pulp Fiction', year: 1994 },
-    { title: 'The Lord of the Rings: The Return of the King', year: 2003 },
-    { title: 'The Good, the Bad and the Ugly', year: 1966 },
-    { title: 'Fight Club', year: 1999 },
-    { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
-    { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
-    { title: 'Forrest Gump', year: 1994 },
-    { title: 'Inception', year: 2010 },
-    { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
-    { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-    { title: 'Goodfellas', year: 1990 },
-    { title: 'The Matrix', year: 1999 },
-    { title: 'Seven Samurai', year: 1954 },
-    { title: 'Star Wars: Episode IV - A New Hope', year: 1977 },
-    { title: 'City of God', year: 2002 },
-    { title: 'Se7en', year: 1995 },
-    { title: 'The Silence of the Lambs', year: 1991 },
-    { title: "It's a Wonderful Life", year: 1946 },
-    { title: 'Life Is Beautiful', year: 1997 },
-    { title: 'The Usual Suspects', year: 1995 },
-    { title: 'Léon: The Professional', year: 1994 },
-    { title: 'Spirited Away', year: 2001 },
-    { title: 'Saving Private Ryan', year: 1998 },
-    { title: 'Once Upon a Time in the West', year: 1968 },
-    { title: 'American History X', year: 1998 },
-    { title: 'Interstellar', year: 2014 },
-    { title: 'Casablanca', year: 1942 },
-    { title: 'City Lights', year: 1931 },
-    { title: 'Psycho', year: 1960 },
-    { title: 'The Green Mile', year: 1999 },
-    { title: 'The Intouchables', year: 2011 },
-    { title: 'Modern Times', year: 1936 },
-    { title: 'Raiders of the Lost Ark', year: 1981 },
-    { title: 'Rear Window', year: 1954 },
-    { title: 'The Pianist', year: 2002 },
-    { title: 'The Departed', year: 2006 },
-    { title: 'Terminator 2: Judgment Day', year: 1991 },
-    { title: 'Back to the Future', year: 1985 },
-    { title: 'Whiplash', year: 2014 },
-    { title: 'Gladiator', year: 2000 },
-    { title: 'Memento', year: 2000 },
-    { title: 'The Prestige', year: 2006 },
-    { title: 'The Lion King', year: 1994 },
-    { title: 'Apocalypse Now', year: 1979 },
-    { title: 'Alien', year: 1979 },
-    { title: 'Sunset Boulevard', year: 1950 },
-    { title: 'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb', year: 1964 },
-    { title: 'The Great Dictator', year: 1940 },
-    { title: 'Cinema Paradiso', year: 1988 },
-    { title: 'The Lives of Others', year: 2006 },
-    { title: 'Grave of the Fireflies', year: 1988 },
-    { title: 'Paths of Glory', year: 1957 },
-    { title: 'Django Unchained', year: 2012 },
-    { title: 'The Shining', year: 1980 },
-    { title: 'WALL·E', year: 2008 },
-    { title: 'American Beauty', year: 1999 },
-    { title: 'The Dark Knight Rises', year: 2012 },
-    { title: 'Princess Mononoke', year: 1997 },
-    { title: 'Aliens', year: 1986 },
-    { title: 'Oldboy', year: 2003 },
-    { title: 'Once Upon a Time in America', year: 1984 },
-    { title: 'Witness for the Prosecution', year: 1957 },
-    { title: 'Das Boot', year: 1981 },
-    { title: 'Citizen Kane', year: 1941 },
-    { title: 'North by Northwest', year: 1959 },
-    { title: 'Vertigo', year: 1958 },
-    { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 },
-    { title: 'Reservoir Dogs', year: 1992 },
-    { title: 'Braveheart', year: 1995 },
-    { title: 'M', year: 1931 },
-    { title: 'Requiem for a Dream', year: 2000 },
-    { title: 'Amélie', year: 2001 },
-    { title: 'A Clockwork Orange', year: 1971 },
-    { title: 'Like Stars on Earth', year: 2007 },
-    { title: 'Taxi Driver', year: 1976 },
-    { title: 'Lawrence of Arabia', year: 1962 },
-    { title: 'Double Indemnity', year: 1944 },
-    { title: 'Eternal Sunshine of the Spotless Mind', year: 2004 },
-    { title: 'Amadeus', year: 1984 },
-    { title: 'To Kill a Mockingbird', year: 1962 },
-    { title: 'Toy Story 3', year: 2010 },
-    { title: 'Logan', year: 2017 },
-    { title: 'Full Metal Jacket', year: 1987 },
-    { title: 'Dangal', year: 2016 },
-    { title: 'The Sting', year: 1973 },
-    { title: '2001: A Space Odyssey', year: 1968 },
-    { title: "Singin' in the Rain", year: 1952 },
-    { title: 'Toy Story', year: 1995 },
-    { title: 'Bicycle Thieves', year: 1948 },
-    { title: 'The Kid', year: 1921 },
-    { title: 'Inglourious Basterds', year: 2009 },
-    { title: 'Snatch', year: 2000 },
-    { title: '3 Idiots', year: 2009 },
-    { title: 'Monty Python and theHoly Grail', year: 1975 },
-];
+
+const mapStateToProps = state => {
+  return {
+    token: state.auth.token,
+    symptomData: state.formData.symptoms || [],
+    municipalityData: state.formData.municipalities || [],
+    stateData: state.formData.states || [],
+    backgroundData: state.formData.backgrounds || [],
+    countryData: state.formData.countries || [],
+    
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onInitFormData: () => dispatch(actions.initFormData())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ImgMediaCard)

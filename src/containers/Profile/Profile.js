@@ -164,10 +164,10 @@ export default function Profile (props) {
                       style={{padding: 8}}
                       image={require("../../img/newspaper.png")}
                       title="Citas"
-                      onClick={()=>history.push('/newsviews')}         
+                      onClick={()=>history.push('/newsview')}         
                     />
                     <CardActions>
-                    <Button color="secondary"  onClick={()=>history.push('/newsviews')} variant="contained" fullWidth>
+                    <Button color="secondary"  onClick={()=>history.push('/newsview')} variant="contained" fullWidth>
                       Noticias
                     </Button>
                   </CardActions>

@@ -253,16 +253,16 @@ export default function Landing() {
          casos clinicos utiles para ti, ese profesional médico motivado a investigar más a fondo sobre las patolagías menos frecuentes en el mundo.
          </Typography>
          </Grid>
-         <Grid item lg={6} sm={12} >
+         <Grid item align='left' lg={6} sm={12} >
          <img src={photo2} alt='photo2' className={classes.img} />
           </Grid> 
        </Grid>
        <Divider style={{marginTop: '100px', marginBottom: "100px"}}/>
        <Grid container spacing={2}>
-              <Grid item lg={6} sm={12} >
+              <Grid item align='left' lg={6} sm={12} >
                   <img src={L2} alt='L2' className={classes.img}/>
               </Grid>
-              <Grid item lg={6} sm={12}>
+              <Grid item align='right' lg={6} sm={12}>
                 <Typography variant="h4" align='justify'color="initial">Historias clínicas electrónicas</Typography>
                 <Typography variant="h5" align='justify'color="initial">EHR ó Registros de salud electrónicos</Typography>
                 <Typography variant="body1" align='justify' color="initial">

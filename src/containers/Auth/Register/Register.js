@@ -125,8 +125,8 @@ class Register extends Component {
                 
                 <Typography variant="h4" color="initial" align="center" className={classes.title}>Crea una cuenta y disfruta de nuestros servicios</Typography>
                     <Grid container spacing={2}>
-                    <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                          <Typography variant="subtitle2" color="initial">Nombres:</Typography>
+                    <Grid item xl={6} lg={6} md={6} sm={6} xs={12}>
+                          <Typography variant="subtitle2" color="initial">Nombres</Typography>
                         <TextField
                                 id="first"
                                 
@@ -147,8 +147,8 @@ class Register extends Component {
                                 helperText={this.props.errors?.first_name ? this.props.errors?.first_name[0] : ""}
                                 />
                         </Grid>
-                        <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                        <Typography variant="subtitle2" color="initial">Apellidos:</Typography>
+                        <Grid item xl={6} lg={6} md={6} sm={6} xs={12}>
+                        <Typography variant="subtitle2" color="initial">Apellidos</Typography>
                         <TextField
                                 id="last"
                                 value={this.state.last_name}
@@ -167,7 +167,7 @@ class Register extends Component {
                                 helperText={this.props.errors?.last_name ? this.props.errors?.last_name[0] : ""}
                                 />
                         </Grid>
-                        <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
+                        <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                         <Typography variant="subtitle2" color="initial">Género</Typography>
                         <TextField className="csex"
                           id="gender"
@@ -182,42 +182,27 @@ class Register extends Component {
                           error={Boolean(this.props.errors?.gender)}
                           helperText={this.props.errors?.gender ? 'Debe seleccionar su género' : null }        
                         >
-                            <MenuItem value={"m"}>
+                            <MenuItem value={"M"}>
                               {"Masculino"}
                             </MenuItem>
-                            <MenuItem value={"f"}>
+                            <MenuItem value={"F"}>
                               {"Femenino"}
                             </MenuItem>
                         
                         </TextField>
-                          {/* <Select
-                            labelId="demo-controlled-open-select-label"
-                            id="demo-controlled-open-select"
-                            name="gender"
-                            open={this.state.generoOpen}
-                            onClose={handleClose}
-                            onOpen={handleOpen}
-                            value={this.state.gender}
-                            onChange={this.onChange}
-                            error={Boolean(this.props.errors?.gender)}
-                            helperText={this.props.errors?.gender ? this.props.errors?.gender[0] : ""}
-                          >
-                            <MenuItem value={"m"}>Masculino</MenuItem>
-                            <MenuItem value={"f"}>Femenino</MenuItem>
-                          </Select> */}
                         </Grid>
-                        <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
+                        <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                         <Typography variant="subtitle2" color="initial">Cédula</Typography>
                         <TextField
-                                id="title"
+                                id="id"
                                 value={this.state.document}
                                 onChange={this.onChange}
-                                type="text"
-                                htmlFor="name"
+                                htmlFor="number"
                                 name="document"
                                 fullWidth
                                 variant="outlined"
                                 required
+                                inputProps={{ type: 'number', pattern: '[0-9]*'}}
                                 autoComplete="true"
                                 autoCapitalize="true"
                                 size="small"
@@ -226,15 +211,16 @@ class Register extends Component {
                                 helperText={this.props.errors?.document ? this.props.errors?.document[0] : ""}
                                 />
                         </Grid>
-                        <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
+                        <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                         <Typography variant="subtitle2" color="initial">Área de estudio</Typography>
                         <Autocomplete
                           multiple
                           size='small'
                           id="tags-filled"
                           variant='outlined'
+                          filterSelectedOptions
+
                           options={top100Films.map((option) => option.title)}
-                          freeSolo
                           renderTags={(value, getTagProps) =>
                             value.map((option, index) => (
                               <Chip color='primary' label={option} {...getTagProps({ index })} />
@@ -245,7 +231,7 @@ class Register extends Component {
                           )}
                         />
                         </Grid>
-                        <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
+                        <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                         <Typography variant="subtitle2" color="initial">Tipo de usuario</Typography>
                         <TextField className="csex"
                           id="gender"
@@ -261,8 +247,8 @@ class Register extends Component {
                           helperText={this.props.errors?.role ? 'Debe seleccionar su tipo de usuario' : null }  
                         >
                             <MenuItem value={"Estudiante"}>Estudiante</MenuItem>
-                            <MenuItem value={"Medico"}>Medico</MenuItem>
-                            <MenuItem value={"Medico Especialista"}>Medico Especialista</MenuItem>
+                            <MenuItem value={"Medico"}>Médico</MenuItem>
+                            <MenuItem value={"Medico Especialista"}>Médico Especialista</MenuItem>
                             <MenuItem value={"Doctor"}>Doctor</MenuItem>
                             <MenuItem value={"Investigador"}>Investigador</MenuItem>
                         
@@ -308,7 +294,7 @@ class Register extends Component {
                                 />
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                        <Typography variant="subtitle2" color="initial">Ingrese su contraseña:</Typography>
+                        <Typography variant="subtitle2" color="initial">Ingrese su contraseña</Typography>
                         <TextField
                                     id="password"
                                     value={this.state.password}

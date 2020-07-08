@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import axios from '../../axios-instance';
 import { makeStyles } from '@material-ui/core/styles';
-import {Card, Grid} from '@material-ui/core/';
+import {Card, Grid, Container, Avatar, Tooltip, Zoom, Paper} from '@material-ui/core/';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -17,36 +17,38 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import Icon from '@material-ui/core/Icon';
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
 
 const useStyles = makeStyles({
   root: {
+    backgroundColor: 'white',
+    borderRadius:'0.5rem',
+    marginTop:24,
+    minHeight: '80vh' 
   },
   container: {
     backgroundColor: "grey",
-    margin: 25,
-    borderRadius: '0.5rem'
+    borderRadius: '0.5rem',
+    padding: 8
   },
   pacient:{
-    margin: 25
-  },
-  icon: {
-    marginLeft: '80%',
-    marginTop: '15%',
-    color: 'green',
-    '&:hover': {
-    color: 'yellow',
-    cursor: 'pointer'
-    },
+    marginTop: 16,
+    marginBottom: 10,
+
   },
   button: {
-    marginTop: 10,
+    marginTop: 0,
   },
- 
-});
+  avatar: {
+    marginTop: 10,
+    backgroundColor: '#D93250' ,
+    color: '#FFFFFF',
+    '&:hover': {
+      cursor: 'pointer'
+  },
+}});
 
 const ImgMediaCard = function(props) {
   const classes = useStyles();
@@ -92,7 +94,7 @@ const ImgMediaCard = function(props) {
       stringSearch: strSearch
     })
   }
-  let pacientsList = <h2>Oops! Parece que no tienes pacientes registrados hasta ahora.</h2>
+  let pacientsList = <Typography variant="h4" align='center' color="initial">Oops! Parece que no tienes pacientes registrados hasta ahora.</Typography>
   if(pacients != null) {
     pacientsList = pacients.map((pacient) => {
       let matches = true;
@@ -123,6 +125,9 @@ const ImgMediaCard = function(props) {
                 </Typography>
               </CardContent>
             </CardActionArea>
+            <CardActions>
+              <Button size="small">Nueva consulta</Button>
+          </CardActions>
           </Card>
         </Grid>
         )
@@ -133,16 +138,17 @@ const ImgMediaCard = function(props) {
   }
 
   return (
-    <div>
-      <Grid container  spacing={1} direction='row' alignItems="flex-start" justify="flex-start">
-      <Grid item xs={11} sm={11}><Typography variant="h3" color="initial">Pacientes</Typography></Grid>
+    <Container maxWidth="lg" className={classes.root}>
+      <Grid container className={classes.pacient} spacing={1} direction='row' alignItems="flex-start" justify="flex-start">
+      <Grid item xs={11} sm={11}>
+        <Typography align='center' variant="h3" color="initial">Pacientes</Typography>
+        </Grid>
       <Grid item xs={1} sm={1}>
-        <PersonAddIcon 
-        fontSize= 'large' 
-        onClick={event =>  window.location.href='/pacientform'}
-        className={classes.icon}
-        alt='Agregar paciente'
-        />
+        <Tooltip title='Agregar nuevo paciente' TransitionComponent={Zoom}>
+            <Avatar variant='rounded' className={classes.avatar} onClick={event =>  window.location.href='/pacientform'}>
+                    <PersonAddIcon />
+                </Avatar>
+        </Tooltip>
         </Grid>      
       </Grid>
       <Grid container  spacing={2} direction='row' alignItems="flex-start" justify="flex-start" className={classes.container}>
@@ -152,7 +158,8 @@ const ImgMediaCard = function(props) {
             type='search'
             variant="outlined"
             fullWidth
-            placeholder="Buscar por nombre, apellido o diagnostico"
+            size='small'
+            placeholder="Buscar por cédula, nombre o apellido"
             value={strSearch}
             onChange={handleStrChange}
             InputProps={{
@@ -169,6 +176,7 @@ const ImgMediaCard = function(props) {
                 <KeyboardDatePicker
                 autoOk
                 fullWidth
+                size='small'
                 variant="inline"
                 inputVariant="outlined"
                 label="Desde"
@@ -187,6 +195,7 @@ const ImgMediaCard = function(props) {
               orientation='landscape'
               clearable
               autoOk
+              size='small'
               fullWidth
               variant="inline"
               inputVariant="outlined"
@@ -222,8 +231,7 @@ const ImgMediaCard = function(props) {
       { pacientsList }
       
     </Grid>
-    </div>
-  );
+    </Container>  );
 }
 
 const mapStateToProps = state => {
