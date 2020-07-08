@@ -159,9 +159,9 @@ export default function Profile (props) {
               <Card>
                   <CardActionArea className={classes.card}>
                     <CardMedia
-                      className="ccalendari"
                       component="img"
-                      alt="Citas"                    
+                      alt="Citas"
+                      style={{padding: 8}}
                       image={require("../../img/newspaper.png")}
                       title="Citas"
                       onClick={()=>history.push('/patientsview')}         

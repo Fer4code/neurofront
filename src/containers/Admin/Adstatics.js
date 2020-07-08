@@ -15,6 +15,7 @@ const useStyles = makeStyles  ((theme) => ({
         backgroundColor: 'white',
         borderRadius: '0.5rem',
         marginTop: theme.spacing(4),
+        marginBottom: theme.spacing(4),
         padding: theme.spacing(2),
         width: '100%'
     },
@@ -78,7 +79,7 @@ export default function Lerea (props){
     const classes = useStyles();
     return(
         <Container maxWidth='lg' className={classes.container}>
-            <Typography align='center' variant="h3" color="initial">Estadisticas del sitio</Typography>
+            <Typography align='center' variant="h3" gutterBottom color="initial">Estadísticas del sitio</Typography>
             <Paper elevation={8} className={classes.exp}>
                 <Grid
                 container

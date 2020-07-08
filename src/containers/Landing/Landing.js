@@ -2,12 +2,14 @@ import React from 'react'
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Carousel from 'react-bootstrap/Carousel'
-import car1 from '../../img/car1.jpg'
-import car2 from '../../img/car2.jpg'
+import car2 from '../../img/car1.jpg'
+import car1 from '../../img/car2.jpg'
 import car3 from '../../img/car3.jpg'
 import photo2 from '../../img/prueba.gif'
+import photo3 from '../../img/inv1.png'
 import L2 from "../../img/L22.png"
-import { Grid, useMediaQuery, Typography, Divider } from '@material-ui/core';
+import {useHistory} from 'react-router-dom'
+import { Grid, useMediaQuery, Typography, Divider, Button } from '@material-ui/core';
 
 import Footer from './Footer'
 
@@ -44,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
     height: '70vh'
   },
   img: {
-    width:'100%'
   },
   paper: {
       display: 'flex',
@@ -55,12 +56,26 @@ const useStyles = makeStyles((theme) => ({
   },
   mid: {
     marginTop: theme.spacing(15)
+  },
+  divcar:{
+    backgroundColor: 'black',
+    width: '100%',
+    height:'70vh',
+    paddingTop: theme.spacing(24),
+    paddingLeft: theme.spacing(22)
+  },
+  textcar: {
+    color: 'white',
+  }, 
+  button: {
+    marginTop: theme.spacing(4)
   }
 }));
 
 export default function Landing() {
-  const [index, setIndex] = React.useState(2);
+  const [index, setIndex] = React.useState(0);
   const classes = useStyles();
+  const history = useHistory();
   const [open, setOpen] = React.useState(false);
   const [isDrawer, setDrawer]= React.useState(false)
   
@@ -79,39 +94,148 @@ export default function Landing() {
       wrap='true'
       touch='true'
       fade='true'
+      slide='false'
+      interval= "10000"
       activeIndex={index} 
       onSelect={handleSelect} 
       className={classes.carousel}>
       <Carousel.Item>
-        <img
+        <Grid
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="flex-start"
+          alignContent="stretch"
+          wrap="nowrap"
+          
+        >
+          <Grid item xs={6} align='center' className={classes.divcar}>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              alignContent="center"
+              wrap="nowrap"
+            >
+            <Grid item xs={12}>
+            <Typography variant="h3" align="center" color="initial" className={classes.textcar}>
+            Inteligencia Artificial (AI) 
+            </Typography>
+            <Typography variant="h4" color="initial" align="justify" className={classes.textcar}>
+            Aplicada a casos clínicos, mejorando la experiencia del usuario, 
+            innovando en la investigación médica, fusionando las ciencias de 
+            computación y medicina en una sola plataforma.
+            </Typography>
+            <Button variant="contained" 
+            color="default" 
+            className={classes.button}
+            onClick={()=>history.push('/Register')}>
+              Crea tu cuenta
+            </Button>
+          </Grid>
+          </Grid>
+          </Grid>
+          <Grid item xs={6}>
+          <img
           className={classes.carimg}
           src={car1}
           alt="First slide"
-        />
+          />
+          </Grid>
+        </Grid>
       </Carousel.Item>
       <Carousel.Item>
-        <img
+      <Grid
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="flex-start"
+          alignContent="stretch"
+          wrap="nowrap"
+          
+        >
+          <Grid item xs={6} align='center' className={classes.divcar}>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              alignContent="center"
+              wrap="nowrap"
+            >
+            <Grid item xs={12}>
+            <Typography variant="h3" align="center" color="initial" className={classes.textcar}>
+            Inteligencia Artificial (AI) 
+            </Typography>
+            <Typography variant="h4" color="initial" align="justify" className={classes.textcar}>
+            Aplicada a casos clínicos, mejorando la experiencia del usuario, 
+            innovando en la investigación médica, fusionando las ciencias de 
+            computación y medicina en una sola plataforma.
+            </Typography>
+            <Button variant="contained" 
+            color="default" 
+            className={classes.button}
+            onClick={()=>history.push('/Register')}>
+              Crea tu cuenta
+            </Button>
+          </Grid>
+          </Grid>
+          </Grid>
+          <Grid item xs={6}>
+          <img
           className={classes.carimg}
-          src={car1}
+          src={car2}
           alt="Second slide"
-        />
-        <Carousel.Caption>
-          <h3>Second slide label</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </Carousel.Caption>
+          />
+          </Grid>
+        </Grid>
       </Carousel.Item>
       <Carousel.Item>
-        <img
+      <Grid
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="flex-start"
+          alignContent="stretch"
+          wrap="nowrap"
+          
+        >
+          <Grid item xs={6} align='center' className={classes.divcar}>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              alignContent="center"
+              wrap="nowrap"
+            >
+            <Grid item xs={12}>
+            <Typography variant="h3" align="center" color="initial" className={classes.textcar}>
+            Inteligencia Artificial (AI) 
+            </Typography>
+            <Typography variant="h4" color="initial" align="justify" className={classes.textcar}>
+            Aplicada a casos clínicos, mejorando la experiencia del usuario, 
+            innovando en la investigación médica, fusionando las ciencias de 
+            computación y medicina en una sola plataforma.
+            </Typography>
+            <Button variant="contained" 
+            color="default" 
+            className={classes.button}
+            onClick={()=>history.push('/Register')}>
+              Crea tu cuenta
+            </Button>
+          </Grid>
+          </Grid>
+          </Grid>
+          <Grid item xs={6}>
+          <img
           className={classes.carimg}
-          src={car1}
+          src={car3}
           alt="Third slide"
-        />
-        <Carousel.Caption>
-          <h3>Third slide label</h3>
-          <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-          </p>
-        </Carousel.Caption>
+          />
+          </Grid>
+        </Grid>
       </Carousel.Item>
       </Carousel>
       </Grid>
@@ -172,8 +296,8 @@ export default function Landing() {
          3. Motivar cada vez más los avances en la medicina que proporcionen nuevas herramientas para la salud.
          </Typography>
          </Grid>
-         <Grid item lg={6} sm={12} >
-         <img src={photo2} alt='photo2' className={classes.img} />
+         <Grid item align='center' lg={6} sm={12} >
+         <img src={photo3} alt='photo3' style={{width:'90%', height:'100%'}} />
           </Grid> 
        </Grid>
       </Grid>

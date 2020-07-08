@@ -45,15 +45,15 @@ export default function AdProfile (props) {
                 <Card>
                   <CardActionArea className={classes.card}>
                     <CardMedia
-                      className="ccalendari"
                       component="img"
-                      alt="Citas"                    
+                      alt="Citas"
+                      style={{padding: 8}}
                       image={require("../../img/monitor.svg")}
                       title="Administrar usuarios"
                       onClick={()=>history.push('/Adusers')}
                     />
                     <CardActions>
-                    <Button color="secondary" variant="contained" fullWidth>
+                    <Button color="secondary" variant="contained" fullWidth onClick={()=>history.push('/Adusers')}>
                     Administrar usuarios
                     </Button>
                   </CardActions>
@@ -68,16 +68,14 @@ export default function AdProfile (props) {
             <Card>
                   <CardActionArea className={classes.card}>
                     <CardMedia
-                      className="ccalendari"
                       component="img"
                       alt="report"                    
                       image={require("../../img/report.png")}
-                      
                       title="Historias"
                       onClick={()=>history.push('/Adexams')}  
                     />
                     <CardActions>
-                    <Button color="secondary" variant="contained" fullWidth>
+                    <Button color="secondary" variant="contained" fullWidth onClick={()=>history.push('/Adexams')}>
                       Administrar Examenes
                     </Button>
                   </CardActions>
@@ -101,7 +99,7 @@ export default function AdProfile (props) {
                       onClick={()=>history.push('/Admedicamentos')}  
                     />
                     <CardActions>
-                    <Button color="secondary" variant="contained" fullWidth>
+                    <Button color="secondary" variant="contained" fullWidth onClick={()=>history.push('/Admedicamentos')}>
                       Admin Medicamentos
                     </Button>
                   </CardActions>
@@ -125,8 +123,8 @@ export default function AdProfile (props) {
                       onClick={()=>history.push('/Adant')}  
                     />
                     <CardActions>
-                    <Button color="secondary" variant="contained" fullWidth>
-                      Admi Antecedentes
+                    <Button color="secondary" variant="contained" fullWidth onClick={()=>history.push('/Adant')}>
+                      Admin Antecedentes
                     </Button>
                   </CardActions>
                   </CardActionArea>
@@ -144,13 +142,37 @@ export default function AdProfile (props) {
                       component="img"
                       alt="Administrar Noticias"                    
                       image={require("../../img/newspaper.png")}
-                      
+                      style={{padding: 8}}
                       title="Adnews"
                       onClick={()=>history.push('/Adnews')}  
                     />
                     <CardActions>
-                    <Button color="secondary" variant="contained" fullWidth>
+                    <Button color="secondary" variant="contained" fullWidth onClick={()=>history.push('/Adnews')}>
                       Administrar Noticias
+                    </Button>
+                  </CardActions>
+                  </CardActionArea>
+                </Card>
+              </Paper>
+              </Tooltip>
+          </Grid>
+          <Grid item xl={4} lg={4} md={4} sm={6} xs={12} >
+          <Tooltip title='Visualizar estadisticas de la App'TransitionComponent={Zoom}>
+            <Paper className={classes.paper}>
+              <Card>
+                  <CardActionArea className={classes.card}>
+                    <CardMedia
+                      className="adnews"
+                      component="img"
+                      alt="Administrar Noticias"                    
+                      image={require("../../img/curve.svg")}
+                      style={{padding: 8}}
+                      title="Adnews"
+                      onClick={()=>history.push('/Adstatics')}  
+                    />
+                    <CardActions>
+                    <Button color="secondary" variant="contained" fullWidth onClick={()=>history.push('/Adstatics')}>
+                      Estadísticas
                     </Button>
                   </CardActions>
                   </CardActionArea>
