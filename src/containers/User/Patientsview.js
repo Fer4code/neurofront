@@ -92,7 +92,7 @@ const ImgMediaCard = function(props) {
       stringSearch: strSearch
     })
   }
-  let pacientsList = <h2>Oops! Parece que no tienes pacientes registrados hasta ahora</h2>
+  let pacientsList = <h2>Oops! Parece que no tienes pacientes registrados hasta ahora.</h2>
   if(pacients != null) {
     pacientsList = pacients.map((pacient) => {
       let matches = true;

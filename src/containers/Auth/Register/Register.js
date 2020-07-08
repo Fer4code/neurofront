@@ -81,7 +81,7 @@ class Register extends Component {
        }
        this.props.onRegister(newUser)
        if(!this.props.errors) {
-         this.props.history.push('/registration-completed')
+         this.props.history.push('/login')
        }
     }
       
@@ -89,7 +89,7 @@ class Register extends Component {
         const { classes } = this.props;
         let authRedirect = null
         if(this.props.registrationCompleted) {
-          authRedirect = <Redirect to={"/registration-completed"} />
+          authRedirect = <Redirect to={"/login"} />
         }
 
         const handleClose = () => {
@@ -168,17 +168,19 @@ class Register extends Component {
                                 />
                         </Grid>
                         <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                        <Typography variant="subtitle2" color="initial">Genero</Typography>
+                        <Typography variant="subtitle2" color="initial">Género</Typography>
                         <TextField className="csex"
                           id="gender"
                           name="gender"
                           required
                           select
+                          size="small"
+                          variant='outlined'
                           fullWidth
                           value={this.state.gender}
                           onChange={this.onChange}
                           error={Boolean(this.props.errors?.gender)}
-                          helperText={this.props.errors?.gender ? this.props.errors?.gender[0] : ""}        
+                          helperText={this.props.errors?.gender ? 'Debe seleccionar su género' : null }        
                         >
                             <MenuItem value={"m"}>
                               {"Masculino"}
@@ -205,7 +207,7 @@ class Register extends Component {
                           </Select> */}
                         </Grid>
                         <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                        <Typography variant="subtitle2" color="initial">Cedula</Typography>
+                        <Typography variant="subtitle2" color="initial">Cédula</Typography>
                         <TextField
                                 id="title"
                                 value={this.state.document}
@@ -219,7 +221,7 @@ class Register extends Component {
                                 autoComplete="true"
                                 autoCapitalize="true"
                                 size="small"
-                                placeholder="Indique su document"
+                                placeholder="Indique su documento"
                                 error={Boolean(this.props.errors?.document)}
                                 helperText={this.props.errors?.document ? this.props.errors?.document[0] : ""}
                                 />
@@ -250,11 +252,13 @@ class Register extends Component {
                           name="role"
                           required
                           select
+                          size="small"
+                          variant='outlined'
                           fullWidth
                           value={this.state.role}
                           onChange={this.onChange}
                           error={Boolean(this.props.errors?.role)}
-                          helperText={this.props.errors?.role ? this.props.errors?.role[0] : ""}  
+                          helperText={this.props.errors?.role ? 'Debe seleccionar su tipo de usuario' : null }  
                         >
                             <MenuItem value={"Estudiante"}>Estudiante</MenuItem>
                             <MenuItem value={"Medico"}>Medico</MenuItem>
@@ -281,11 +285,11 @@ class Register extends Component {
                                 size="small"
                                 placeholder="Usuario"
                                 error={Boolean(this.props.errors?.username)}
-                                helperText={this.props.errors?.username ? this.props.errors?.username[0] : ""}
+                                helperText={this.props.errors?.username ? 'Usuario no disponible, intente otro' : null}
                                 />
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                        <Typography variant="subtitle2" color="initial">Correo Electronico:</Typography>
+                        <Typography variant="subtitle2" color="initial">Correo Electronico</Typography>
                               <TextField
                                 id="email"
                                 value={this.state.email}
@@ -300,7 +304,7 @@ class Register extends Component {
                                 autoComplete="true"
                                 size="small"
                                 error={Boolean(this.props.errors?.email)}
-                                helperText={this.props.errors?.email ? this.props.errors?.email[0] : ""}
+                                helperText={this.props.errors?.email ? 'Ya existe una cuenta con este correo' : null }
                                 />
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>

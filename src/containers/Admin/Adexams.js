@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import axios from '../../axios-instance';
 import { makeStyles, Typography, Button, Dialog, DialogActions,TextField, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 import MaterialTable from 'material-table';
 import { ReactComponent as Check } from '../icons/check.svg';
@@ -32,11 +34,32 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function ExamTable() {
+const  ExamTable = function(props) {
   const classes = useStyles(); 
   const { useState } = React;
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
+  const [exams, setExams] = React.useState(null)
+  const [newExam, setNewExam] = React.useState({
+    name: '',
+    description: ''
+  })
+
+  const config = {
+    headers: { Authorization: "Bearer " + props.token }
+  }
+
+  React.useEffect(() => {
+    if (exams === null) {
+      axios.get('exam_types', config)
+        .then((response) => {
+          setExams(response.data.data)
+        })
+        .catch((err) => {
+
+        })
+    }
+  })
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -53,10 +76,27 @@ export default function ExamTable() {
     setOpen1(false);
   };
 
-  const [data, setData] = useState([
-    { name: 'Tomografia', created: '20/02/2020', description: 'text' },
-  ]);
+  const changeNewExam = (e) => {
+    setNewExam({
+      ...newExam,
+      [e.target.name]: e.target.value
+    })
+  }
 
+  const handleSubmit = () => {
+    axios.post('exam_types', newExam, config)
+    .then((response) => {
+      console.log(response.data)
+    })
+    .catch((err) => {
+      console.log(err.data)
+    })
+  }
+
+  let examsList = []
+  if (exams != null) {
+    examsList = exams
+  }
   return (
     <div className={classes.root}>
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -69,6 +109,9 @@ export default function ExamTable() {
             autoFocus
             margin="dense"
             id="exam_name"
+            name="name"
+            value={newExam.name}
+            onChange={changeNewExam}
             placeholder="Nombre del examen"
             type="text"
             fullWidth
@@ -78,6 +121,9 @@ export default function ExamTable() {
             autoFocus
             margin="dense"
             id="exam_description"
+            name="description"
+            value={newExam.description}
+            onChange={changeNewExam}
             placeholder="Descripcion"
             type="text"
             fullWidth
@@ -87,7 +133,7 @@ export default function ExamTable() {
           />
         </DialogContent>
         <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={handleSubmit} color="primary">
             Agregar
           </Button>
           <Button onClick={handleClose} color="primary">
@@ -127,10 +173,10 @@ export default function ExamTable() {
         
         { title: 'Nombre', field: 'name' },
         
-        { title: 'Creado', field: 'created'},
+        { title: 'Descripción', field: 'description'},
         
       ]}
-      data={data}
+      data={examsList}
       detailPanel={[
         {
           tooltip: 'Show Name',
@@ -217,3 +263,16 @@ export default function ExamTable() {
     </div>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    token: state.auth.token
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExamTable)

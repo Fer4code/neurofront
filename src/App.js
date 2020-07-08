@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { Container, CssBaseline, ThemeProvider, Drawer } from '@material-ui/core'
+import ReactGA from 'react-ga'
+import createHistory from 'history/createBrowserHistory'
 
 
 import MenuAppBar from './components/Navigation/Navbar/Navbar'
@@ -35,6 +37,10 @@ import * as actions from './store/actions/index';
 import {light} from './theme'
 import Footer from './containers/Landing/Footer';
 
+const history = createHistory()
+ReactGA.initialize('UA-171994443-1');
+
+
 class App extends Component {
 
   componentDidMount() {
@@ -45,13 +51,14 @@ class App extends Component {
       const token = localStorage.getItem('accessToken')
       this.props.retrieveUserInfo(token, userId)
     }
+
   }
   render() {
     return (
       <ThemeProvider theme={light}>
         <CssBaseline/>
       
-      <Router>
+      <Router history={history}>
         <div className="App">
           {/*<Navbar /> */}
           <MenuAppBar isAuthenticated={this.props.isAuthenticated}/>

@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import axios from '../../axios-instance';
 import { makeStyles, Typography } from '@material-ui/core';
 import MaterialTable from 'material-table';
 import { ReactComponent as Check } from '../icons/check.svg';
@@ -8,7 +10,7 @@ import { ReactComponent as War } from '../icons/warning.svg';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    paddingTop: theme.spacing(10),
+    paddingTop: theme.spacing(6),
     width: '100%',
     height: '90%',
     position: 'center',
@@ -31,30 +33,48 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function UserTable() {
-  const classes = useStyles(); 
+const UserTable = function(props) {
+  const classes = useStyles();
+  
+  const [users, setUsers] = React.useState(null)
+
+  React.useEffect(() => {
+    if (users === null) {
+      const config = {
+        headers: { Authorization: "Bearer " + props.token }
+      }
+      axios.get('users', config)
+        .then((response) => {
+          setUsers(response.data.data)
+        })
+        .catch((err) => {
+
+        })
+    }
+  })
+  
+  let usersList = []
+  if(users != null) {
+    usersList = users
+  }
   return (
     <div className={classes.root}>
       <MaterialTable className={classes.table} 
       title= {<Typography variant='h6' className={classes.title}>Administrador de usuarios</Typography>}
       columns={[
         
-        { title: 'Nombre', field: 'name' },
-        { title: 'Apellido', field: 'surname' },
+        { title: 'Nombre', field: 'first_name' },
+        { title: 'Apellido', field: 'last_name' },
         { title: 'Correo', field: 'email'},
-        { title: 'Usuario', field: 'user'},
-        { title: 'Area', 
-          field: 'area', 
-          lookup: { 36: 'Neurologia', 98: 'Neurocirugia'}
+        { title: 'Usuario', field: 'username'},
+        { title: 'Tipo de usuario', 
+          field: 'role', 
         },
-        { title: 'Medic ID', field: 'cmedico'},
-        { title: 'Creado', field: 'created'},
+        { title: 'Género', field: 'gender'},
+        { title: 'Creado', field: 'created_at'},
         
       ]}
-      data={[
-        { name: 'Jose', surname: 'Orellana', email: 'jose.mom@gmail.com', user: 'Jose.mom',  area: 36, cmedico: '4009', created: '20/02/2020' },
-        { name: 'Fernando', surname: 'Martinez', email: 'ferujap', user: 'ferjmt',  area: 98, cmedico: '4010', created: '20/08/2020' },
-      ]}
+      data={usersList}
       localization={{
         header: {
             actions: 'Acciones'
@@ -121,3 +141,16 @@ export default function UserTable() {
     </div>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    token: state.auth.token
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserTable)

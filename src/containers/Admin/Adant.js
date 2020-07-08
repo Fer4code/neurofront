@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import axios from '../../axios-instance';
 import { makeStyles, Typography, Grid, Button, Dialog, DialogActions,TextField, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 import MaterialTable from 'material-table';
 import { ReactComponent as Check } from '../icons/check.svg';
@@ -32,11 +34,32 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function AntTable() {
+const  AntTable = function(props) {
   const classes = useStyles(); 
   const { useState } = React;
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
+  const [ants, setAnts] = React.useState(null)
+  const [newAnt, setNewAnt] = React.useState({
+    name: '',
+    description: ''
+  })
+
+  const config = {
+    headers: { Authorization: "Bearer " + props.token }
+  }
+
+  React.useEffect(() => {
+    if (ants === null) {
+      axios.get('backgrounds', config)
+        .then((response) => {
+          setAnts(response.data.data)
+        })
+        .catch((err) => {
+
+        })
+    }
+  })
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -53,9 +76,27 @@ export default function AntTable() {
     setOpen1(false);
   };
 
-  const [data, setData] = useState([
-    { name: 'Alcoholismo', description: 'text' },
-  ]);
+  const handleSubmit = () => {
+    axios.post('backgrounds', newAnt, config)
+    .then((response) => {
+      console.log(response.data)
+    })
+    .catch((err) => {
+      console.log(err.data)
+    })
+  }
+
+  const changeNewAnt = (e) => {
+    setNewAnt({
+      ...newAnt,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  let antsList = []
+  if (ants != null) {
+    antsList = ants
+  }
 
   return (
     <div className={classes.root}>
@@ -69,6 +110,9 @@ export default function AntTable() {
             autoFocus
             margin="dense"
             id="ant_name"
+            name="name"
+            value={newAnt.name}
+            onChange={changeNewAnt}
             placeholder="Nombre del antecedente"
             type="text"
             fullWidth
@@ -78,6 +122,9 @@ export default function AntTable() {
             autoFocus
             margin="dense"
             id="ant_description"
+            name="description"
+            value={newAnt.description}
+            onChange={changeNewAnt}
             placeholder="Detalles"
             type="text"
             fullWidth
@@ -87,7 +134,7 @@ export default function AntTable() {
           />
         </DialogContent>
         <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={handleSubmit} color="primary">
             Agregar
           </Button>
           <Button onClick={handleClose} color="primary">
@@ -127,10 +174,10 @@ export default function AntTable() {
         
         { title: 'Nombre', field: 'name' },
         
-        { title: 'Creado', field: 'created'},
+        { title: 'Descripcion', field: 'description'},
         
       ]}
-      data={data}
+      data={antsList}
       detailPanel={[
         {
           tooltip: 'Show Name',
@@ -217,3 +264,17 @@ export default function AntTable() {
     </div>
   );
 }
+
+
+const mapStateToProps = state => {
+  return {
+    token: state.auth.token
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AntTable)
