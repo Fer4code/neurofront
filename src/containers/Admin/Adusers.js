@@ -70,7 +70,7 @@ const UserTable = function(props) {
         { title: 'Tipo de usuario', 
           field: 'role', 
         },
-        { title: 'Género', field: 'gender'},
+        { title: 'Género', field: 'gender', render: rowData => rowData == "m" ? "Masculino" : "Femenino"},
         { title: 'Creado', field: 'created_at'},
         
       ]}
@@ -100,14 +100,32 @@ const UserTable = function(props) {
         },
     }}
       actions={[
-        {
-          icon: () => <Check className={classes.icon}/>,
-          tooltip: 'Habilitado',
-          onClick: (event, rowData) => alert("You saved " + rowData.name)
-        },
+        rowData => ({
+          icon: ()=> <Check className= {classes.icon}/>,
+          tooltip: 'Habilitar',
+          hidden: rowData.active,
+          onClick: (event, rowData) => {
+            const config = {
+              headers: { Authorization: "Bearer " + props.token }
+            }
+            axios.put('users/' + rowData.id, { active: 1}, config)
+            alert("Usuario habilitado")
+
+          }
+        })
+        ,
         rowData => ({
           icon: ()=> <War className= {classes.icon}/>,
           tooltip: 'Inhabilitar',
+          hidden: !rowData.active,
+          onClick: (event, rowData) => {
+            const config = {
+              headers: { Authorization: "Bearer " + props.token }
+            }
+            axios.put('users/' + rowData.id, { active: 0}, config)
+            alert("Usuario deshabilitado")
+      
+          }
         }),        
       ]}
       options={{

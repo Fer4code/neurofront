@@ -80,6 +80,9 @@ const  AntTable = function(props) {
     axios.post('backgrounds', newAnt, config)
     .then((response) => {
       console.log(response.data)
+      alert("Antecedente creado satisfactoriamente")
+      handleClose()
+      setNewAnt({ name: "", description: ""})
     })
     .catch((err) => {
       console.log(err.data)
@@ -119,7 +122,6 @@ const  AntTable = function(props) {
             variant="outlined"
           />
           <TextField
-            autoFocus
             margin="dense"
             id="ant_description"
             name="description"
@@ -177,7 +179,7 @@ const  AntTable = function(props) {
         { title: 'Descripcion', field: 'description'},
         
       ]}
-      data={antsList}
+      data={ants || []}
       detailPanel={[
         {
           tooltip: 'Show Name',

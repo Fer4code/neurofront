@@ -8,7 +8,7 @@ const navigationItems = (props) => (
         <NavigationItem link={"/register"} stylew={props.stylew}>Crea una cuenta</NavigationItem>
         <NavigationItem link={"/login"} stylew={props.stylew}>Ingresa a tu cuenta</NavigationItem>
         <NavigationItem link={"/profile"} stylew={props.stylew}>Profile</NavigationItem>
-        <NavigationItem link={"/Adprofile"} style={props.stylew}>Adprofile</NavigationItem>
+        <NavigationItem link={"/Adprofile"} stylew={props.stylew}>Adprofile</NavigationItem>
         <NavigationItem link={"/test"} stylew={props.stylew}>TEST</NavigationItem>
     </React.Fragment>
 )

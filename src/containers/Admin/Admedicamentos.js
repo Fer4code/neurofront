@@ -84,6 +84,8 @@ const  MedTable =  function(props) {
     axios.post('medicine_types', newMed, config)
     .then((response) => {
       console.log(response.data)
+      alert("Medicamento creado satisfactoriamente")
+      handleClose()
     })
     .catch((err) => {
       console.log(err.data)
@@ -123,7 +125,6 @@ const  MedTable =  function(props) {
             variant="outlined"
           />
           <TextField
-            autoFocus
             margin="dense"
             id="med_active"
             name="principio_activo"
@@ -137,7 +138,7 @@ const  MedTable =  function(props) {
             variant="outlined"
           />
           <TextField
-            autoFocus
+            
             margin="dense"
             id="med_present"
             name="presentacion"
@@ -149,7 +150,6 @@ const  MedTable =  function(props) {
             variant="outlined"
           />
           <TextField
-            autoFocus
             margin="dense"
             id="med_lab"
             name="laboratorio"

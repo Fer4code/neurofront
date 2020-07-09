@@ -130,11 +130,9 @@ class Login extends Component {
               </Button>
               
               <Typography variant="subtitle2" style={{marginTop: 8}}color="initial">Aún no tienes cuenta?</Typography>
-              <Button variant="outlined" style={{margin: 4}} size='small' onClick={this.redir} color="default">
+              <Button variant='text' style={{margin: 3}} size='small' onClick={this.redir} color="default">
                 Registrate
               </Button>
-              
-              
               </Grid>
             </form>
             {authRedirect}

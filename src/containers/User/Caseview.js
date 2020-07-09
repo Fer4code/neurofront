@@ -15,7 +15,8 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Container from '@material-ui/core/Container';
-
+import Chip from '@material-ui/core/Chip';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 
 const useStyles = makeStyles  ((theme) => ({
@@ -50,34 +51,25 @@ const useStyles = makeStyles  ((theme) => ({
   }
 }));
 
-const ImgMediaCard =  function(props) {
+const getData = (array) => {
+  array = array.map(a => a.name)
+  return array.join()
+}
+
+const Caseview =  function(props) {
   const classes = useStyles();
   const { id } = useParams()
-  const [pacient, setPacient] = useState({
-    first_name: null,
-    last_name: null,
-    clinical_stories: []
-  })
+  const [clinical_story, setClinicalStory] = useState(null)
 
-  const changeData = function(e) {
-    setPacient({
-      ...pacient,
-      [e.target.name]: e.target.value
-    })
-  }
 
   useEffect(() => {
-    if(!pacient.first_name) {
+    if(!clinical_story) {
       const config = {
         headers: { Authorization: "Bearer " + props.token }
       }
-      axios.get('pacients/' + id, config)
+      axios.get('clinical_stories/' + id, config)
         .then((response) => {
-          setPacient({
-            first_name: response.data.data.first_name,
-            last_name: response.data.data.last_name,
-            clinical_stories: response.data.data.clinical_stories,
-          })
+          setClinicalStory(response.data.data)
         })
         .catch((err) => {
 
@@ -138,6 +130,7 @@ const ImgMediaCard =  function(props) {
                         fullWidth
                         label="Edad"
                         size='small'
+                        value={clinical_story?.edad_paciente || 0}
                     />
                 </Grid>
                 <Grid item xl={2} lg={2} md={2} sm={6} xs={12}>
@@ -149,6 +142,7 @@ const ImgMediaCard =  function(props) {
                         fullWidth
                         label="Genero"
                         size='small'
+                        value={clinical_story?.pacient.gender || ''}
                     />
                 </Grid>
                 <Grid item xl={3} lg={3} md={3} sm={6} xs={12}>
@@ -161,6 +155,7 @@ const ImgMediaCard =  function(props) {
                         id="direction"
                         label="Profesion"
                         size='small'
+                        value={clinical_story?.pacient.profession || ''}
                     />
                 </Grid>
                 <Grid item xl={2} lg={2} md={3} sm={6} xs={12}>
@@ -173,6 +168,7 @@ const ImgMediaCard =  function(props) {
                         id="direction"
                         label="Tipo de sangre"
                         size='small'
+                        value={clinical_story?.pacient.blood_type || ''}
                     />
                 </Grid>
                 <Grid item xl={3} lg={3} md={3} sm={6} xs={12}>
@@ -185,17 +181,24 @@ const ImgMediaCard =  function(props) {
                         id="direction"
                         label="Estado civil"
                         size='small'
+                        value={clinical_story?.pacient.marital_status || ''}
                     />
                 </Grid>
       <Grid item sm={6}>
             <Typography align= "left" className={classes.info}>Antecedentes personales</Typography>
-                        <TextField
+            <TextField
+                                id="first"
+                                type="text"
+                                htmlFor="name"
+                                name="first_name"
                                 variant="outlined"
                                 fullWidth
-                                requiredInputProps={{
+                                InputProps={{
                                   readOnly: true,
                                 }}
                                 placeholder="Antecedentes personales"
+                                value={clinical_story?.pacient?.personal_backgrounds ? getData(clinical_story.pacient.personal_backgrounds) : ' '}
+
                                 />
       </Grid>
       <Grid item sm={6}>
@@ -210,6 +213,7 @@ const ImgMediaCard =  function(props) {
                                 InputProps={{
                                   readOnly: true,
                                 }}
+                                value={clinical_story?.pacient?.family_backgrounds ? getData(clinical_story.pacient.family_backgrounds) : ' '}
                                 placeholder="Antecedentes familiares"
                                 />
       </Grid>
@@ -223,6 +227,7 @@ const ImgMediaCard =  function(props) {
                         id="direction"
                         label="Estado"
                         size='small'
+                        value={clinical_story?.pacient?.direction?.state?.name || ''}
                     />
                 </Grid>
                 <Grid item xl={3} lg={3} md={3} sm={6} xs={12}>
@@ -235,6 +240,7 @@ const ImgMediaCard =  function(props) {
                         id="direction"
                         label="Pais"
                         size='small'
+                        value={clinical_story?.pacient?.direction?.country?.country_name || ''}
                     />
                 </Grid>
                 <Grid item xl={6} lg={6} md={3} sm={6} xs={12}>
@@ -247,6 +253,7 @@ const ImgMediaCard =  function(props) {
                         id="direction"
                         label="Diagnostico"
                         size='small'
+                        value={clinical_story?.diagnosis || ''}
                     />
                 </Grid>
     </Grid>
@@ -287,8 +294,7 @@ const ImgMediaCard =  function(props) {
                           rowsMax="10"
                           id="fisical_exam"
                           label="Motivo de consulta"
-                          value={props.fisical_exam}
-                          onChange={props.onChangeFnc}
+                          value={clinical_story?.description|| ''}
                         />
                   </Grid>
         </ExpansionPanelDetails>
@@ -303,8 +309,7 @@ const ImgMediaCard =  function(props) {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-            sit amet blandit leo lobortis eget.
+          {clinical_story?.symptoms ? getData(clinical_story.symptoms) : ' '}
           </Typography>
         </ExpansionPanelDetails>
       </ExpansionPanel>
@@ -332,8 +337,7 @@ const ImgMediaCard =  function(props) {
                           rowsMax="10"
                           id="fisical_exam"
                           label="Examen Fisico"
-                          value={props.fisical_exam}
-                          onChange={props.onChangeFnc}
+                          value={clinical_story?.fisical_exam || ''}
                         />
                   </Grid>
                   <Grid item lg={2}>
@@ -349,8 +353,7 @@ const ImgMediaCard =  function(props) {
                               size='small'
                               id="diastolica"
                               label="Presion Diastolica"
-                              value={props.observations}
-                              onChange={props.onChangeFnc}
+                              value={clinical_story?.diastolic || ''}
                             />
                           </Grid>
                           <Grid item lg={12}>
@@ -364,8 +367,7 @@ const ImgMediaCard =  function(props) {
                               size='small'
                               id="diastolica"
                               label="Presion Sistolica"
-                              value={props.observations}
-                              onChange={props.onChangeFnc}
+                              value={clinical_story?.sistolic || ''}
                             />
                           </Grid>
                           <Grid item lg={12}>
@@ -379,8 +381,7 @@ const ImgMediaCard =  function(props) {
                               size='small'
                               id="diastolica"
                               label="Estatura (cm)"
-                              value={props.observations}
-                              onChange={props.onChangeFnc}
+                              value={clinical_story?.height || ''}
                             />
                           </Grid>
                           <Grid item lg={12}>
@@ -394,8 +395,7 @@ const ImgMediaCard =  function(props) {
                               size='small'
                               id="diastolica"
                               label="Peso (Kg)"
-                              value={props.observations}
-                              onChange={props.onChangeFnc}
+                              value={clinical_story?.weight || ''}
                             />
                           </Grid>
                     </Grid>
@@ -426,8 +426,7 @@ const ImgMediaCard =  function(props) {
                           rowsMax="10"
                           id="fisical_exam"
                           label="Observaciones"
-                          value={props.fisical_exam}
-                          onChange={props.onChangeFnc}
+                          value={clinical_story?.observations || ''}
                         />
                   </Grid>
         </ExpansionPanelDetails>
@@ -453,4 +452,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ImgMediaCard)
+export default connect(mapStateToProps, mapDispatchToProps)(Caseview)

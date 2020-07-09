@@ -1,17 +1,24 @@
 import React from 'react';
+import clsx from 'clsx';
 import { connect } from 'react-redux';
 import axios from '../../axios-instance';
-import { makeStyles, Typography } from '@material-ui/core';
+import { makeStyles, Typography, useTheme, Container } from '@material-ui/core';
 import MaterialTable from 'material-table';
+import Zoom from '@material-ui/core/Zoom';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
+import UpIcon from '@material-ui/icons/KeyboardArrowUp';
+import { green } from '@material-ui/core/colors';
 import { ReactComponent as Check } from '../icons/check.svg';
+import BackButton from '../../components/UI/BackButton/BackButton';
 
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    paddingTop: theme.spacing(10),
     width: '100%',
-    height: '90%',
+    height: '60vh',
     position: 'center',
     align: 'center',
   },
@@ -29,12 +36,17 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     color: '#A69C68',
+  },
+  container: {
+    marginTop: theme.spacing(10)
   }
 }));
 
 const ExamTable = function(props) {
   const classes = useStyles(); 
   const { useState } = React;
+  const theme = useTheme();
+  const [value, setValue] = React.useState(0);
   const [exams, setExams] = React.useState(null)
   const [newExam, setNewExam] = React.useState({
     name: '',
@@ -44,6 +56,31 @@ const ExamTable = function(props) {
   const config = {
     headers: { Authorization: "Bearer " + props.token }
   }
+  const transitionDuration = {
+    enter: theme.transitions.duration.enteringScreen,
+    exit: theme.transitions.duration.leavingScreen,
+  };
+
+  const fabs = [
+    {
+      color: 'primary',
+      className: classes.fab,
+      icon: <AddIcon />,
+      label: 'Add',
+    },
+    {
+      color: 'secondary',
+      className: classes.fab,
+      icon: <EditIcon />,
+      label: 'Edit',
+    },
+    {
+      color: 'inherit',
+      className: clsx(classes.fab, classes.fabGreen),
+      icon: <UpIcon />,
+      label: 'Expand',
+    },
+  ];
 
   React.useEffect(() => {
     if (exams === null) {
@@ -65,6 +102,9 @@ const ExamTable = function(props) {
 
   return (
     <div className={classes.root}>
+          <BackButton/>
+      <Container maxWidth="lg" className={classes.container}>
+        
       <MaterialTable className={classes.table} 
       title= {<Typography variant='h6' className={classes.title}>Examenes</Typography>}
       columns={[
@@ -82,10 +122,11 @@ const ExamTable = function(props) {
             return (
               <div
                 style={{
-                  fontSize: 100,
-                  textAlign: 'center',
-                  color: 'white',
-                  backgroundColor: '#43A047',
+                  paddingLeft: 20,
+                  fontSize: 20,
+                  textAlign: 'left',
+                  color: 'black',
+                  backgroundColor: 'white',
                 }}
               >
                 {rowData.description}
@@ -122,7 +163,6 @@ const ExamTable = function(props) {
         {
           icon: () => <Check className={classes.icon}/>,
           tooltip: 'Habilitado',
-          onClick: (event, rowData) => alert("You saved " + rowData.name)
         },
                
       ]}
@@ -135,7 +175,7 @@ const ExamTable = function(props) {
           backgroundColor: '#1111'
         },
         detailPanelStyle: {
-            backgroundColor: '#EEE',
+            backgroundColor: 'white',
         },
         searchFieldStyle: {
           backgroundColor: '#91C5D3', 
@@ -144,11 +184,12 @@ const ExamTable = function(props) {
         searchFieldVariant: 'outlined',
         actionsColumnIndex: -1,
         exportButton: false,
-        pageSize: 10,
-        pageSizeOptions: [10, 15, 20],       
+        pageSize: 7,
+        pageSizeOptions: [5, 15, 20],       
       }}
     />
-    </div>
+          </Container>
+      </div>
   );
 }
 

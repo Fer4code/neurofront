@@ -13,10 +13,12 @@ import { Redirect } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import Alert from '@material-ui/lab/Alert';
 import GenderPicker from '../../../components/UI/Pickers/GenderPicker/GenderPicker'
 
 
 import * as actions from '../../../store/actions/index';
+import transitions from '@material-ui/core/styles/transitions'
 
 const useStyles = theme => ({
   paper: {
@@ -40,7 +42,7 @@ const useStyles = theme => ({
     fontSize: theme.typography.pxToRem(20),
     margin: theme.spacing(4, 0, 2),
     text: theme.palette.button, 
-    backgroundColor: 'green'
+    backgroundColor: '#2EF2F2'
   },
   root: {
     width: '100%',
@@ -80,17 +82,24 @@ class Register extends Component {
           ...this.state
        }
        this.props.onRegister(newUser)
-       if(!this.props.errors) {
-         this.props.history.push('/login')
-       }
+       
     }
       
     render() {
         const { classes } = this.props;
+
+        let cargando = null
+        if(this.props.loading) {
+          cargando= <Alert variant="filled" severity="success">
+          This is a success alert — check it out!
+        </Alert>
+        }
+
         let authRedirect = null
         if(this.props.registrationCompleted) {
           authRedirect = <Redirect to={"/login"} />
         }
+       
 
         const handleClose = () => {
           this.setState({ generoOpen: false})
@@ -182,10 +191,10 @@ class Register extends Component {
                           error={Boolean(this.props.errors?.gender)}
                           helperText={this.props.errors?.gender ? 'Debe seleccionar su género' : null }        
                         >
-                            <MenuItem value={"M"}>
+                            <MenuItem value={"m"}>
                               {"Masculino"}
                             </MenuItem>
-                            <MenuItem value={"F"}>
+                            <MenuItem value={"f"}>
                               {"Femenino"}
                             </MenuItem>
                         
@@ -352,7 +361,8 @@ const top100Films = [
 const mapStateToProps = state => {
   return {
     errors: state.user.errors,
-    registrationCompleted: state.user.registrationCompleted
+    registrationCompleted: state.user.registrationCompleted,
+    loading: state.user.loading
   }
 }
 

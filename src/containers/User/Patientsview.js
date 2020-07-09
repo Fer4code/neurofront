@@ -15,10 +15,13 @@ import TextField from "@material-ui/core/TextField";
 import DateFnsUtils from '@date-io/date-fns';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import Icon from '@material-ui/core/Icon';
+import BackButton from '../../components/UI/BackButton/BackButton';
+
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+import SearchBar from '../../components/UI/TextInput/SearchBar';
 
 
 const useStyles = makeStyles({
@@ -50,8 +53,10 @@ const useStyles = makeStyles({
   },
 }});
 
-const ImgMediaCard = function(props) {
+const Patientsview = function(props) {
   const classes = useStyles();
+  const [isFocussed, setFocussed] = React.useState(false);
+
 
   const [pacients, setPacients] = React.useState(null)
 
@@ -79,6 +84,9 @@ const ImgMediaCard = function(props) {
     }
   })
 
+  const clean = ()=> {
+    setStrSearch('')
+  }
   const handleFrom = (date) => {
     setSelectedDate(date);
   };
@@ -94,9 +102,10 @@ const ImgMediaCard = function(props) {
       stringSearch: strSearch
     })
   }
+  var por = []
   let pacientsList = <Typography variant="h4" align='center' color="initial">Oops! Parece que no tienes pacientes registrados hasta ahora.</Typography>
   if(pacients != null) {
-    pacientsList = pacients.map((pacient) => {
+    pacientsList = por.map((pacient) => {
       let matches = true;
       if(searchParams.stringSearch != null) {
         const lowercaseFirstName = pacient.first_name.toLowerCase()
@@ -139,6 +148,7 @@ const ImgMediaCard = function(props) {
 
   return (
     <Container maxWidth="lg" className={classes.root}>
+                <BackButton/>
       <Grid container className={classes.pacient} spacing={1} direction='row' alignItems="flex-start" justify="flex-start">
       <Grid item xs={11} sm={11}>
         <Typography align='center' variant="h3" color="initial">Pacientes</Typography>
@@ -153,7 +163,11 @@ const ImgMediaCard = function(props) {
       </Grid>
       <Grid container  spacing={2} direction='row' alignItems="flex-start" justify="flex-start" className={classes.container}>
         <Grid item lg={6} xs={12} sm={12}>
-          <TextField
+                <SearchBar cedula='Buscar por cedula, nombre y apellido' value={strSearch} 
+                cancel={clean}
+                cl={()=>setFocussed(true)}
+                onchange={handleStrChange}/>
+          {/*<TextField
             id="outlined-search"
             type='search'
             variant="outlined"
@@ -169,8 +183,8 @@ const ImgMediaCard = function(props) {
                 </InputAdornment>
               )
             }}
-          />
-        </Grid>
+          />*/}
+          </Grid>
         <Grid item lg={2} xs={6} sm={6}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
@@ -245,4 +259,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ImgMediaCard)
+export default connect(mapStateToProps, mapDispatchToProps)(Patientsview)

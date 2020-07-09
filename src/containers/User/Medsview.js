@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import axios from '../../axios-instance';
-import { makeStyles, Typography } from '@material-ui/core';
+import { makeStyles, Typography, Container } from '@material-ui/core';
 import MaterialTable from 'material-table';
+import BackButton from '../../components/UI/BackButton/BackButton';
 import { ReactComponent as Check } from '../icons/check.svg';
 import { ReactComponent as War } from '../icons/warning.svg';
 
@@ -10,7 +11,6 @@ import { ReactComponent as War } from '../icons/warning.svg';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    paddingTop: theme.spacing(10),
     width: '100%',
     height: '90%',
     position: 'center',
@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     color: '#A69C68',
+  },
+  container: {
+    marginTop: theme.spacing(10)
   }
 }));
 
@@ -86,7 +89,8 @@ const  MedTable = function(props) {
 
   return (
     <div className={classes.root}>
-        
+      <BackButton/>
+        <Container maxWidth="lg" className={classes.container}>
       <MaterialTable className={classes.table} 
       title= {<Typography variant='h6' className={classes.title}>Medicamentos</Typography>}
       columns={[        
@@ -171,6 +175,7 @@ const  MedTable = function(props) {
         pageSizeOptions: [10, 15, 20],       
       }}
     />
+    </Container>
     </div>
   );
 }

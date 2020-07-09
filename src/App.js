@@ -1,4 +1,4 @@
-/*import Test from './components/Navigation/Navbar/Test'*/
+import Test from './components/Navigation/Navbar/Test'
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, } from 'react-router-dom'
 import { connect } from 'react-redux';
@@ -67,6 +67,8 @@ class App extends Component {
             <Route exact path="/registration-completed" component={PostRegister}/>
             <Route exact path="/login" component={Login}/>
             <Route exact path="/Adstatics" component={Adstatics}/>
+            <Route exact path="/Test" component ={Test}/>
+            <Route exact path="/Examsview" component ={Examsview}/>
           <Container maxWidth='lg'>
             <Route exact path="/profile" component={Profile}/>
             <Route exact path="/pacientform" component={PacientForm}/>
@@ -78,8 +80,7 @@ class App extends Component {
             <Route exact path="/Admedicamentos" component={Admedicamentos}/>
             <Route exact path="/Adalergies" component ={Adalergies}/>            
             <Route exact path="/Adnews" component={Adnews}/>
-            {/*<Route exact path="/Test" component ={Test}/>*/}
-            <Route exact path="/Examsview" component ={Examsview}/>
+            
             <Route exact path="/Patientsview" component={Patientsview}/>
             <Route exact path="/Patientview" component={Patientview}/>
             <Route exact path="/Histories" component={Histories}/>

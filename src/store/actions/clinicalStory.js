@@ -23,20 +23,34 @@ export const saveClinicalStoryStart = () => {
 export const saveClinicalStory = ( clinicalStoryData, token ) => {
     return async (dispatch) => {
         try {
+            const relevantData = []
+            clinicalStoryData.metadata.forEach(csdata => {
+                let val = false
+                clinicalStoryData.relevantMetadata.forEach(csdata2 => {
+                  val = val || csdata.id == csdata2.id 
+                })
+                relevantData.push(val)
+            })
+            console.log(relevantData)
             const config = {
                 headers: { Authorization: `Bearer ${token}` }
             }
             dispatch( saveClinicalStoryStart() );
+            console.log(clinicalStoryData.birth_date)
+            
             const directionData = {
-                country_id: clinicalStoryData.country,
-                state_id: clinicalStoryData.state,
                 municipality_id: clinicalStoryData.municipality,
                 description: clinicalStoryData.direction
             }
             let response = await axios.post('directions', directionData, config )
-            console.log("direction working")
+
             const iso_date = clinicalStoryData.birth_date.toISOString().slice(0, 10)
+            const personal_background = clinicalStoryData.personal_backgrounds.map((bg => bg.id))
+            const family_background = clinicalStoryData.family_backgrounds.map((bg => bg.id))
+            const family_member = clinicalStoryData.family_backgrounds.map((bg => bg.member))
+            const vaccine = clinicalStoryData.vaccines.map((bg => bg.id))
             const pacientData = {
+                current_direction: response.data.data.id,
                 first_name: clinicalStoryData.first_name,
                 second_name: clinicalStoryData.second_name,
                 last_name: clinicalStoryData.last_name,
@@ -48,41 +62,47 @@ export const saveClinicalStory = ( clinicalStoryData, token ) => {
                 blood_type: clinicalStoryData.blood_type,
                 telephone_1: clinicalStoryData.telephone,
                 telephone_2: clinicalStoryData.telephone2,
-                current_direction: response.data.data.id
+                related_data: {
+                    personal_background,
+                    family_background,
+                    family_member,
+                    vaccine: clinicalStoryData.vaccine,
+                }
             }
             response = await axios.post('pacients', pacientData, config)
-            console.log("pacient working")
-            const pacientRelatedData = {
-                pacient_id: response.data.data.id,
-                personal_background: clinicalStoryData.personal_background,
-                family_background: clinicalStoryData.family_background,
-                allergy: clinicalStoryData.allergy,
-                vaccine: clinicalStoryData.vaccine
-            }
-            response = await axios.post('pacients/related_data', pacientRelatedData, config)
-            console.log("pacient data working")
+
+            
+            const symptom_id = clinicalStoryData.symptoms.map((option) => option.id)
+            const metadata_id = clinicalStoryData.metadata.map((option) => option.id)
             const clinicalStory = {
-                pacient_id: response.data.data.pacient_id,
+                pacient_id: response.data.data.id,
+                edad_paciente: clinicalStoryData.edad_paciente,
                 description: clinicalStoryData.description,
                 fisical_exam: clinicalStoryData.fisical_exam,
+                diastolic: clinicalStoryData.diastolic,
+                sistolic: clinicalStoryData.sistolic,
+                pulse: clinicalStoryData.pulse,
+                frec_resp: clinicalStoryData.frec_resp,
+                temp: clinicalStoryData.temp,
+                height: clinicalStoryData.height,
+                weight: clinicalStoryData.weight,
                 observations: clinicalStoryData.observations,
-                cognitions: clinicalStoryData.cognitions,
-                surgeries: clinicalStoryData.surgeries
+                diagnosis: clinicalStoryData.diagnosis,
+                related_data: {
+                    symptom_id: symptom_id,
+                    metadata_id: metadata_id,
+                    relevant: relevantData
+                }
             }
-    
             response = await axios.post('clinical_stories', clinicalStory, config)
-            console.log("clin story working")
-            const clinicalStoryRelatedData = {
-                medicine_id: clinicalStoryData.medicine,
-                clinical_story_id: response.data.data.id
-            }
-    
-            response = await axios.post('clinical_stories/related_data', clinicalStoryRelatedData, config)
-            console.log("clin story data working")
+            
+            
+            
+            
             dispatch( saveClinicalStorySuccess() );
         } catch (error) {
-            console.log(error.response)
-                dispatch( saveClinicalStoryFail( error.response.data.errors ) );
+            console.log(error)
+            dispatch( saveClinicalStoryFail( error.response.data.errors ) );
         }
         
     };

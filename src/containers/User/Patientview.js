@@ -13,8 +13,9 @@ import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import MaterialTable from 'material-table';
 import { ReactComponent as Check } from '../icons/check.svg';
-
-
+import { ReactComponent as War } from '../icons/warning.svg';
+import Chip from '@material-ui/core/Chip';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles  ((theme) => ({
   root: {
@@ -67,14 +68,16 @@ const useStyles = makeStyles  ((theme) => ({
   }
 }));
 
+const getAnts = (array1, array2) => {
+  array1 = array1.map(a => a.name)
+  array2 = array2.map(a => a.name)
+  return array1.concat(array2).join()
+} 
+
 const ImgMediaCard =  function(props) {
   const classes = useStyles();
   const { id } = useParams()
-  const [pacient, setPacient] = useState({
-    first_name: null,
-    last_name: null,
-    clinical_stories: []
-  })
+  const [pacient, setPacient] = useState(null)
 
   const changeData = function(e) {
     setPacient({
@@ -84,17 +87,13 @@ const ImgMediaCard =  function(props) {
   }
 
   useEffect(() => {
-    if(!pacient.first_name) {
+    if(!pacient) {
       const config = {
         headers: { Authorization: "Bearer " + props.token }
       }
       axios.get('pacients/' + id, config)
         .then((response) => {
-          setPacient({
-            first_name: response.data.data.first_name,
-            last_name: response.data.data.last_name,
-            clinical_stories: response.data.data.clinical_stories,
-          })
+          setPacient(response.data.data)
         })
         .catch((err) => {
 
@@ -102,6 +101,16 @@ const ImgMediaCard =  function(props) {
     }
   })
 
+  let pBackNames = []
+  if (pacient?.personal_backgrounds?.length > 0 && pBackNames.length > 0 ) {
+    pBackNames = pacient.personal_backgrounds.map((pb) => pb.name)
+    console.log(pBackNames)     
+  }
+  let fBackNames = []
+  if (pacient?.family_backgrounds?.length > 0 && fBackNames.length > 0) {
+    fBackNames = pacient.family_backgrounds.map(fb => fb.name + "(Familiar)")
+    console.log(fBackNames)
+  }
   return (
     <div>
       <Grid container  spacing={2} direction='row' alignItems="flex-start" justify="flex-start">
@@ -148,8 +157,6 @@ const ImgMediaCard =  function(props) {
                                     type="text"
                                     htmlFor="name"
                                     name="first_name"
-                                    value={pacient.first_name}
-                                    onChange={changeData}
                                     variant="outlined"
                                     fullWidth
                                     autoComplete="true"
@@ -157,6 +164,8 @@ const ImgMediaCard =  function(props) {
                                     autoFocus
                                     placeholder="Ingrese su nombre"
                                     size="small"
+                                    disabled={true}
+                                    value={pacient?.first_name}
                                     />
                     </Tooltip>
                 </Grid>
@@ -167,8 +176,6 @@ const ImgMediaCard =  function(props) {
                                 type="text"
                                 htmlFor="name"
                                 name="last_name"
-                                value={pacient.last_name}
-                                onChange={changeData}
                                 variant="outlined"
                                 fullWidth
                                 required
@@ -177,11 +184,13 @@ const ImgMediaCard =  function(props) {
                                 autoFocus
                                 placeholder="Ingrese su nombre"
                                 size="small"
+                                disabled={true}
+                                value={pacient?.last_name}
                                 />
         </Grid>
       <Grid item sm={12}>
             <Typography align= "left" className={classes.info}>Datos personales</Typography>
-                        <TextField
+            <TextField
                                 id="first"
                                 type="text"
                                 htmlFor="name"
@@ -192,12 +201,14 @@ const ImgMediaCard =  function(props) {
                                 autoComplete="true"
                                 autoCapitalize="true"
                                 autoFocus
-                                placeholder="Ingrese su nombre"
+                                placeholder="Vacunas"
                                 size="small"
+                                disabled={true}
+                                value={`Estado civil: ${pacient?.marital_status}; Tipo de sange:${pacient?.blood_type}`}
                                 />
       </Grid>
       <Grid item sm={6}>          
-            <Typography align= "left" className={classes.info}>Alergias</Typography>
+            <Typography align= "left" className={classes.info}>Vacunas</Typography>
                         <TextField
                                 id="first"
                                 type="text"
@@ -209,8 +220,10 @@ const ImgMediaCard =  function(props) {
                                 autoComplete="true"
                                 autoCapitalize="true"
                                 autoFocus
-                                placeholder="Ingrese su nombre"
+                                placeholder="Vacunas"
                                 size="small"
+                                disabled={true}
+                                value={pacient?.vaccines?.join() || 'Sin vacunas'}
                                 />
         </Grid>
       <Grid item sm={6}>
@@ -228,6 +241,8 @@ const ImgMediaCard =  function(props) {
                                 autoFocus
                                 placeholder="Ingrese su nombre"
                                 size="small"
+                                disabled={true}
+                                value={ pacient?.personal_backgrounds ? getAnts(pacient.personal_backgrounds, pacient.family_backgrounds) : ''}
                                 />
         </Grid>
     </Grid>
@@ -244,7 +259,7 @@ const ImgMediaCard =  function(props) {
         { title: 'Fecha', field: 'created_at'},
         
       ]}
-      data={pacient.clinical_stories}
+      data={pacient?.clinical_stories}
       detailPanel={[
         {
           tooltip: 'Mostrar Detalles',
@@ -266,7 +281,7 @@ const ImgMediaCard =  function(props) {
       ]}
       localization={{
         header: {
-            actions: 'Informe'
+            actions: 'Diagnostico'
         },
         body: {
             emptyDataSourceMessage: 'Este paciente no tiene consultas previas',
@@ -289,11 +304,17 @@ const ImgMediaCard =  function(props) {
         },
     }}
     actions={[
-        {
+        rowData => ({
           icon: () => <Check className={classes.icon}/>,
-          tooltip: 'Habilitado',
-          onClick: (event, rowData) => alert("You saved " + rowData.name)
-        },       
+          tooltip: 'Posee diagnostico',
+          onClick: (event, rowData) => alert(rowData.diagnosis),
+          hidden: !rowData.diagnosis
+      }),
+        rowData => ({
+          icon: () => <War className={classes.icon} />,
+          toooltip: 'No posee diagnostico',
+          hidden: rowData.diagnosis
+        })       
       ]}
       options={{
         headerStyle: {

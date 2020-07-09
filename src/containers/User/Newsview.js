@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import axios from '../../axios-instance';
 import { makeStyles } from '@material-ui/core/styles';
-import {Card, Grid} from '@material-ui/core/';
+import {Card, Grid, Container} from '@material-ui/core/';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -15,6 +15,9 @@ import TextField from "@material-ui/core/TextField";
 import DateFnsUtils from '@date-io/date-fns';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import Icon from '@material-ui/core/Icon';
+import BackButton from '../../components/UI/BackButton/BackButton';
+import SearchBar from '../../components/UI/TextInput/SearchBar';
+
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -24,30 +27,32 @@ import {
 
 const useStyles = makeStyles({
   root: {
+    backgroundColor: 'white',
+    borderRadius:'0.5rem',
+    marginTop:24,
+    minHeight: '80vh' 
   },
   container: {
     backgroundColor: "grey",
-    margin: 25
+    borderRadius: '0.5rem',
+    padding: 8
   },
-  news:{
-    margin: 25
-  },
-  icon: {
-    marginLeft: '80%',
-    marginTop: '15%',
-    color: 'green',
-    '&:hover': {
-    color: 'yellow',
-    cursor: 'pointer'
-    },
+  pacient:{
+    marginTop: 16,
+    marginBottom: 10,
+
   },
   button: {
-    margin: 1,
+    marginTop: 0,
   },
-  search: {
-    marginRight: 1,
-  }
-});
+  avatar: {
+    marginTop: 10,
+    backgroundColor: '#D93250' ,
+    color: '#FFFFFF',
+    '&:hover': {
+      cursor: 'pointer'
+  },
+}});
 
 const ImgMediaCard = function(props) {
   const classes = useStyles();
@@ -78,6 +83,10 @@ const ImgMediaCard = function(props) {
     }
   })
 
+  const clean = ()=> {
+    setStrSearch('')
+  }
+
   const handleFrom = (date) => {
     setSelectedDate(date);
   };
@@ -95,7 +104,7 @@ const ImgMediaCard = function(props) {
       maximumDate: selectedDateu
     })
   }
-  let newsList = <h2>0 noticias</h2>
+  let newsList = <Typography variant="h4" color="initial">Parece que no hay buenas nuevas.</Typography>
   if(news != null) {
     newsList = news.map((news) => {
       let matchesString = true;
@@ -151,18 +160,32 @@ const ImgMediaCard = function(props) {
 
   return (
     <div>
-      <Grid container  spacing={2} direction='row' alignItems="flex-start" justify="flex-start">
-      <Grid item xs={11} sm={11}><Typography variant="h3" color="initial">Noticias</Typography></Grid>
-         
+    <Container maxWidth="lg" className={classes.root}>
+                <BackButton/>
+      <Grid container className={classes.pacient} spacing={1} direction='row' alignItems="flex-start" justify="flex-start">
+      <Grid item xs={11} sm={11}>
+        <Typography align='center' variant="h3" color="initial">Noticias</Typography>
+        </Grid>
+      {/*<Grid item xs={1} sm={1}>
+        <Tooltip title='Agregar nuevo paciente' TransitionComponent={Zoom}>
+            <Avatar variant='rounded' className={classes.avatar} onClick={event =>  window.location.href='/pacientform'}>
+                    <PersonAddIcon />
+                </Avatar>
+        </Tooltip>
+          </Grid>*/}    
       </Grid>
       <Grid container  spacing={2} direction='row' alignItems="flex-start" justify="flex-start" className={classes.container}>
-        <Grid item xs={12} sm={12}>
-          <TextField
+        <Grid item lg={6} xs={12} sm={12}>
+                <SearchBar cedula='Titulo o palabras claves' value={strSearch} 
+                cancel={clean}
+                onchange={handleStrChange}/>
+          {/*<TextField
             id="outlined-search"
             type='search'
             variant="outlined"
             fullWidth
-            placeholder="Buscar por titulo o descripcion"
+            size='small'
+            placeholder="Buscar por cédula, nombre o apellido"
             value={strSearch}
             onChange={handleStrChange}
             InputProps={{
@@ -172,13 +195,14 @@ const ImgMediaCard = function(props) {
                 </InputAdornment>
               )
             }}
-          />
-        </Grid>
-        <Grid item xs={6} sm={6}>
+          />*/}
+          </Grid>
+        <Grid item lg={2} xs={6} sm={6}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                 autoOk
                 fullWidth
+                size='small'
                 variant="inline"
                 inputVariant="outlined"
                 label="Desde"
@@ -191,12 +215,13 @@ const ImgMediaCard = function(props) {
               />
                 </MuiPickersUtilsProvider>
         </Grid>
-        <Grid item xs={6} sm={6}>
+        <Grid item lg={2} xs={6} sm={6}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
               orientation='landscape'
               clearable
               autoOk
+              size='small'
               fullWidth
               variant="inline"
               inputVariant="outlined"
@@ -209,21 +234,19 @@ const ImgMediaCard = function(props) {
             />
               </MuiPickersUtilsProvider>
         </Grid>
-        <Grid container spacing={2} direction='row' alignItems="center" justify="flex-end" >
-        <Grid item xs={2} sm={2} className={classes.search}>
-        <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        endIcon={<Icon>search</Icon>}
-        fullWidth
-        onClick={changeParams}
-      >
-        Buscar
-      </Button>
-      </Grid>
+        <Grid item align='center' lg={2} xs={2} sm={2} >
+                  <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  endIcon={<Icon>search</Icon>}
+                  fullWidth
+                  onClick={changeParams}
+                >
+                  Buscar
+                </Button>
+              </Grid>
         </Grid>
-    </Grid>
     <Grid
       container
       spacing={2}
@@ -234,6 +257,7 @@ const ImgMediaCard = function(props) {
       { newsList }
       
     </Grid>
+    </Container>
     </div>
   );
 }

@@ -75,7 +75,7 @@ export const retrieveUserInfo = (token, userId) => {
                 dispatch(authSuccess(token, response.data.data));
             })
             .catch(err => {
-               console.log(err);
+                dispatch(authFail(err.response.data.errors));
             });
     };
 };

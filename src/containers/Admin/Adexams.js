@@ -87,6 +87,8 @@ const  ExamTable = function(props) {
     axios.post('exam_types', newExam, config)
     .then((response) => {
       console.log(response.data)
+      alert("Examen creado satisfactoriamente")
+      handleClose()
     })
     .catch((err) => {
       console.log(err.data)

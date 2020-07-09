@@ -44,8 +44,8 @@ const  NewsTable = function(props) {
     title: '',
     abstract: '',
     link: '',
-    img_url: ''
   })
+  const [img, setImg] = React.useState(null)
 
   const config = {
     headers: { Authorization: "Bearer " + props.token }
@@ -82,10 +82,18 @@ const  NewsTable = function(props) {
     axios.post('news', newOne, config)
     .then((response) => {
       console.log(response.data)
+      if (img) {
+        fileUpload(img, response.data.data.id).then((response)=>{
+          console.log(response.data);
+        })
+      alert("Noticia creada satisfactoriamente")
+      handleClose()
+      }
     })
     .catch((err) => {
       console.log(err.data)
     })
+
   }
 
   const changeNewOne = (e) => {
@@ -99,6 +107,25 @@ const  NewsTable = function(props) {
   if (news != null) {
     newsList = news
   }
+
+  const changeFile = (e) => {
+    setImg(e.target.files[0])
+  }
+
+  const fileUpload = (file, id) => {
+    const url = 'news/' + id + "/image";
+    const formData = new FormData();
+    formData.append('image',file)
+    const config = {
+        headers: {
+            'content-type': 'multipart/form-data',
+            'Authorization': "Bearer " + props.token
+        }
+    }
+    return  axios.post(url, formData,config)
+  }
+
+  
 
   return (
     <div className={classes.root}>
@@ -148,20 +175,7 @@ const  NewsTable = function(props) {
             rowsMax={7}
             variant="outlined"
           />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="api_address"
-            name="img_url"
-            value={newOne.img_url}
-            onChange={changeNewOne}
-            placeholder="Link de imagen"
-            type="text"
-            fullWidth
-            multiline="true"
-            rowsMax={7}
-            variant="outlined"
-          />
+          <input type="file" onChange={changeFile} />
         </DialogContent>
         <DialogActions>
         <Button onClick={handleSubmit} color="primary">

@@ -17,6 +17,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Slider from '@material-ui/core/Slider';
 import Paper from '@material-ui/core/Paper'
 import * as actions from '../../store/actions/index';
+import BackButton from '../../components/UI/BackButton/BackButton';
+import { shadows } from '@material-ui/system';
+
 import {
   Search as SearchIcon,
   CloseOutlined as CloseOutlinedIcon
@@ -56,9 +59,17 @@ const estados = [
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    
+    backgroundColor: 'white',
+    borderRadius:'0.5rem',
+    marginTop:24,
+    minHeight: '80vh' 
   },
   container: {
+    backgroundColor: "#DFE9F2",
+    borderRadius: '0.5rem',
+    padding: 8
+  },
+  container1: {
     marginTop: 18,
     backgroundColor: "white",
     borderRadius: "0.5rem"
@@ -73,11 +84,10 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: "0.5rem"
     
   },
-  pacient:{
-    marginTop: 25
-  },
-  icon: {
-    height: '40px'
+  inv:{
+    marginTop: 16,
+    marginBottom: 10,
+
   },
   button: {
         margin: theme.spacing(1)
@@ -230,7 +240,7 @@ const ImgMediaCard = function (props) {
 
   }
 
-  let clinicalStoriesList = <h2>0 historias</h2>
+  let clinicalStoriesList = <Typography variant="h4" color="initial">Parece que no hay nada nuevo por aqui!!</Typography>
   if(clinicalStories != null) {
     clinicalStoriesList = clinicalStories.map((clinicalStory) => {
       let matches1 = true
@@ -332,11 +342,17 @@ const ImgMediaCard = function (props) {
 
   
   return (
-    <Container component="main" maxWidth="false" className={classes.paper}>
-      <CssBaseline />
-      <h2>Investigación</h2>
+    <Container maxWidth="lg" className={classes.root}>
+                <BackButton/>
+      <Grid container className={classes.inv} spacing={1} direction='row' alignItems="flex-start" justify="flex-start">
+      <Grid item xs={11} sm={11}>
+        <Typography align='center' variant="h4" color="initial">Investigación</Typography>
+        </Grid>
+ 
+      </Grid>
+      <Box boxShadow={3}>
       <Grid container  
-      spacing={2} 
+      spacing={1} 
       direction='row' 
       alignItems="flex-start" 
       justify="flex-start" 
@@ -442,16 +458,14 @@ const ImgMediaCard = function (props) {
       </ClickAwayListener>
       
         </Grid>
-        <Grid xs={3} sm={3}>
+        <Grid item xs={3} sm={3}>
         <TextField
             autoComplete=""
             name="diagnosis"
             variant="outlined"
             multiline
-            rows={4}
+            rows={2}
             fullWidth
-            rowsMax="10"
-            id="fisical_exam"
             label="Ingrese diagnostico"
             value={diagnosis}
             onChange={handleSetDiagnosis}
@@ -478,12 +492,14 @@ const ImgMediaCard = function (props) {
       </Grid>
         </Grid>
     </Grid>
+    </Box>
     <Grid
       container
       spacing={2}
       direction="row"
-      alignItems="flex-start" justify="flex-start"
-      className={classes.pacient}
+      alignItems="flex-start" 
+      justify="flex-start"
+      className={classes.inv}
     >
       {clinicalStoriesList}
     </Grid>

@@ -5,14 +5,41 @@ const initialState = {
     countries: [],
     states: [],
     municipalities: [],
-    personalBackgrounds: [],
-    familyBackgrounds: [],
-    allergies: [],
+    backgrounds: [],
     vaccines: [],
     medicines: [],
+    symptoms: [],
+    metadata: [],
     error: false,
     loading: false
 };
+
+const estados = [
+    "Amazonas",
+    "Anzoátegui",
+    "Apure",
+    "Aragua",
+    "Barinas",
+    "Bolívar",
+    "Carabobo",
+    "Cojedes",
+    "Delta Amacuro",
+    "Falcón",
+    "Guárico",
+    "Lara",
+    "Mérida",
+    "Miranda",
+    "Monagas",
+    "Nueva Esparta",
+    "Portuguesa",
+    "Sucre",
+    "Táchira",
+    "Trujillo",
+    "Vargas",
+    "Yaracuy",
+    "Zulia",
+    "Distrito Capital"
+  ]
 
 const initFormDataStart = ( state, action ) => {
     return updateObject( state, { error: null, loading: true } );
@@ -26,13 +53,24 @@ const initFormDataFail = (state, action) => {
 };
 
 const initFormDataSuccess = (state, action) => {
+    console.log(action)
+    if (action.municipalities) {
+        action.municipalities.forEach(municipality => {
+            municipality.name = municipality.name + "(" + estados[municipality.state_id - 1] + ")"
+        })
+        action.backgrounds.forEach(bg => {
+            bg.name2 = bg.name + "(antecedente)"
+        })
+    }
     return updateObject(state, { 
         countries: action.countries,
-        personalBackgrounds: action.personalBackgrounds,
-        familyBackgrounds: action.familyBackgrounds,
-        allergies: action.allergies,
+        states: action.states,
+        municipalities: action.municipalities,
+        backgrounds: action.backgrounds,
         vaccines: action.vaccines,
-        medicines: action.medicines
+        medicines: action.medicines,
+        symptoms: action.symptoms,
+        metadata: action.metadata
      })
 }
 

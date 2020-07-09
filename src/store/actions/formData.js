@@ -7,17 +7,31 @@ export const initFormDataStart = () => {
     };
 };
 
-export const initFormDataSuccess = (formData) => {
-    console.log(formData)
-    return {
-        type: actionTypes.INIT_FORM_DATA_SUCCESS,
-        countries: formData.countries,
-        personalBackgrounds: formData.personal_backgrounds,
-        familyBackgrounds: formData.family_backgrounds,
-        allergies: formData.allergies,
-        vaccines: formData.vaccines,
-        medicines: formData.medicines
-    };
+export const initFormDataSuccess = (formData, restrainState) => {
+    console.log(restrainState)
+    if (restrainState) {
+        return {
+            type: actionTypes.INIT_FORM_DATA_SUCCESS,
+            countries: formData.countries,
+            backgrounds: formData.backgrounds,
+            vaccines: formData.vaccines,
+            medicines: formData.medicines,
+            symptoms: formData.symptoms,
+            metadata: formData.metadata
+        };
+    } else {
+        return {
+            type: actionTypes.INIT_FORM_DATA_SUCCESS,
+            countries: formData.countries,
+            states: formData.states,
+            municipalities: formData.municipalities,
+            backgrounds: formData.backgrounds,
+            vaccines: formData.vaccines,
+            medicines: formData.medicines,
+            symptoms: formData.symptoms,
+            metadata: formData.metadata
+        };
+    }
 };
 
 export const initFormDataFail = (error) => {
@@ -41,12 +55,14 @@ export const fetchMunicipalitiesSuccess = (formData) => {
     };
 };
 
-export const initFormData = () => {
+export const initFormData = (restrainState=false) => {
+    console.log(restrainState)
     return dispatch => {
         dispatch(initFormDataStart())
         axios.get('form_data')
             .then(response => {
-                dispatch(initFormDataSuccess(response.data.data))
+                console.log(response.data.data)
+                dispatch(initFormDataSuccess(response.data.data, restrainState))
             })
             .catch(err => {
                 console.log(err)
