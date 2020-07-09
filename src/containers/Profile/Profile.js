@@ -34,8 +34,8 @@ export default function Profile (props) {
     const history = useHistory()
    
     return (
+       <Container maxWidth="lg">
       <div container className="cont">
-        
         <Grid container spacing={10} justify="center">
           <Grid item xl={4} lg={4} md={4} sm={6} xs={11}>
           <Tooltip title='Registrar paciente nuevo'TransitionComponent={Zoom}>
@@ -61,7 +61,7 @@ export default function Profile (props) {
             </Tooltip>
           </Grid>
           <Grid item xl={4} lg={4} md={4} sm={6} xs={11} >
-          <Tooltip title='Ver mis historias registradas'TransitionComponent={Zoom}>
+          <Tooltip title='Ver mis pacientes registrados'TransitionComponent={Zoom}>
             <Paper className={classes.paper}>
             <Card className={classes.card}>
                   <CardActionArea>
@@ -69,14 +69,14 @@ export default function Profile (props) {
                       className="ccalendari"
                       component="img"
                       alt="report"                    
-                      image={require("../../img/report.png")}
+                      image={require("../../img/patients.svg")}
                       onClick={()=>history.push('/patientsview')}
                       title="Historias"
                                 
                     />
                     <CardActions>
                     <Button color="secondary" onClick={()=>history.push('/patientsview')} variant="contained" fullWidth>
-                      Mis Historias
+                      Mis Pacientes
                     </Button>
                   </CardActions>
                   </CardActionArea>
@@ -178,6 +178,7 @@ export default function Profile (props) {
           </Grid>
         </Grid>
       </div>
+      </Container>
     );
    }
 
