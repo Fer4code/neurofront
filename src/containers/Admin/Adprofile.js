@@ -10,6 +10,7 @@ import Button from "@material-ui/core/Button";
 import { connect } from 'react-redux';
 import {useHistory} from 'react-router-dom'
 
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -156,6 +157,7 @@ export default function AdProfile (props) {
               </Paper>
               </Tooltip>
           </Grid>
+          {/*
           <Grid item xl={4} lg={4} md={4} sm={6} xs={12} >
           <Tooltip title='Visualizar estadisticas de la App'TransitionComponent={Zoom}>
             <Paper className={classes.paper}>
@@ -179,7 +181,7 @@ export default function AdProfile (props) {
                 </Card>
               </Paper>
               </Tooltip>
-          </Grid>
+          </Grid>*/}
         </Grid>
       </div>
     );

@@ -66,8 +66,8 @@ const SearchBar = (props,{ onSearchClose }) => {
         borderRadius={theme.shape.borderRadius}
         bgcolor={
           isFocussed
-            ? theme.palette.background.default
-            : theme.palette.background.highlight
+            ? '#7AB3BF'
+            : '#96BFD9'
         }
         boxShadow={isFocussed ? 2 : 0}
         height={"2.5rem"}
@@ -93,7 +93,7 @@ const SearchBar = (props,{ onSearchClose }) => {
             <CloseOutlinedIcon htmlColor={theme.custom.palette.iconColor} />
           </IconButton>
         ) : null}
-        <Snackbar open={isShowingToast} message={"Search not implemented ;)"} autoHideDuration={2000} onClose={handleToastClose} />
+        <Snackbar open={isShowingToast} message={"No pudimos ubicar lo que nos pediste, lo sentimos :'("} autoHideDuration={3000} onClose={handleToastClose} />
       </Box>
     </ClickAwayListener>
   );

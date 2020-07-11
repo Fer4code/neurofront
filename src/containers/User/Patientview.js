@@ -3,58 +3,45 @@ import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import axios from '../../axios-instance';
 import { makeStyles } from '@material-ui/core/styles';
-import {Card, Grid} from '@material-ui/core/';
+import {Card, Grid, Tooltip, Container, Zoom, Avatar, Box} from '@material-ui/core/';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import TextField from "@material-ui/core/TextField";
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import Paper from '@material-ui/core/Paper';
-import Tooltip from '@material-ui/core/Tooltip';
 import MaterialTable from 'material-table';
 import { ReactComponent as Check } from '../icons/check.svg';
 import { ReactComponent as War } from '../icons/warning.svg';
+import BackButton from '../../components/UI/BackButton/BackButton';
 import Chip from '@material-ui/core/Chip';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles  ((theme) => ({
   root: {
+    backgroundColor: '#DFE9F2',
+    borderRadius:'0.5rem',
+    marginTop:24,
+    minHeight: '80vh',
+    padding: theme.spacing(2) 
   },
   container: {
     backgroundColor: "grey",
-    margin: 25
+    borderRadius: '0.5rem',
+    padding: 8
   },
   pacient:{
-    margin: 25
+    marginTop: 16,
+    marginBottom: 10,
+    backgroundColor: 'white',
+    borderRadius: '0.5rem'
   },
-  icon: {
-    marginLeft: '80%',
-    marginTop: '15%',
-    color: 'green',
+  avatar: {
+    marginTop: 6,
+    backgroundColor: '#D93250' ,
+    color: '#FFFFFF',
     '&:hover': {
-    color: 'yellow',
-    cursor: 'pointer'
-    },
-  },
-  button: {
-    margin: 1,
-  },
-  search: {
-    marginRight: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-  info:{
-    variant:"subtitle1",
-     color:"initial",     
-  },  
-  icon: {
-    width: "30px",
-    height: "30px",
-    viewBox: "0 0 100 100"
+      cursor: 'pointer'
   },
   table: {
     width: '100%',
@@ -66,7 +53,7 @@ const useStyles = makeStyles  ((theme) => ({
   title: {
     color: '#A69C68',
   }
-}));
+}}));
 
 const getAnts = (array1, array2) => {
   array1 = array1.map(a => a.name)
@@ -112,17 +99,17 @@ const ImgMediaCard =  function(props) {
     console.log(fBackNames)
   }
   return (
-    <div>
-      <Grid container  spacing={2} direction='row' alignItems="flex-start" justify="flex-start">
-      <Grid item xs={11} sm={11}><Typography variant="h3" color="initial">Paciente</Typography></Grid>
+      <Container maxWidth="lg" className={classes.root}>
+                <BackButton/>
+      <Grid container spacing={2} direction='row' alignItems="flex-start" justify="flex-start">
+      <Grid item xs={11} sm={11}><Typography variant="h3" align='center' color="initial">Paciente</Typography></Grid>
       <Grid item xs={1} sm={1}>
-        <PersonAddIcon 
-        fontSize= 'large' 
-        onClick={event =>  window.location.href='/pacientform'}
-        className={classes.icon}
-        alt='Agregar paciente'
-        />
-        </Grid>      
+        <Tooltip title='Agregar nuevo paciente' TransitionComponent={Zoom}>
+            <Avatar variant='rounded' className={classes.avatar} onClick={event =>  window.location.href='/pacientform'}>
+                    <PersonAddIcon />
+                </Avatar>
+        </Tooltip>
+        </Grid>     
       </Grid>
       
     <Grid
@@ -134,20 +121,19 @@ const ImgMediaCard =  function(props) {
       className={classes.pacient}
     >
       <Grid item xl={3} lg={3} md={3} sm={3} xs={6}>
-        <Card className={classes.root}>
+        <Card>
           <CardActionArea>
             <CardMedia
               component="img"
               alt="Contemplative Reptile"
               height="256"
-              image="/static/images/cards/contemplative-reptile.jpg"
+              image={require("../../img/braindd.svg")}
               title="Contemplative Reptile"
             />
             </CardActionArea>
             </Card>
       </Grid>
       <Grid item xs={9}>
-          <Paper className={classes.paper}>
             <Grid container spacing={2}>
                 <Grid item sm={6}>
                     <Typography align= "left" className={classes.info}>Nombres</Typography>
@@ -245,10 +231,13 @@ const ImgMediaCard =  function(props) {
                                 value={ pacient?.personal_backgrounds ? getAnts(pacient.personal_backgrounds, pacient.family_backgrounds) : ''}
                                 />
         </Grid>
+
+    </Grid>
     </Grid>
       
-      </Paper>
       </Grid>
+      <Grid container spacing={1}>
+        
       <Grid item sm={12}>
       <MaterialTable className={classes.table} 
       title= {<Typography variant='h6' className={classes.title}>Consultas</Typography>}
@@ -341,7 +330,7 @@ const ImgMediaCard =  function(props) {
       </Grid>
         
       </Grid>
-    </div>
+    </Container>
   );
 }
 

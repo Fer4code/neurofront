@@ -6,6 +6,8 @@ import MaterialTable from 'material-table';
 import { ReactComponent as Check } from '../icons/check.svg';
 import { ReactComponent as War } from '../icons/warning.svg';
 import { ReactComponent as Eadd } from '../icons/examadd.svg';
+import BackButton from '../../components/UI/BackButton/BackButton';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -129,6 +131,7 @@ const  NewsTable = function(props) {
 
   return (
     <div className={classes.root}>
+        <BackButton/>
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle>Agregar nueva API de noticias</DialogTitle>
         <DialogContent>

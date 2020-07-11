@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
       alignItems: 'center',
       width: '100%',
-      background: 'grey',
+      background: '#DCEEF2',
       borderRadius: "0.5rem"
     
   },
@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
   slider:{
   width: '100%',
   padding: theme.spacing(2),
-  
+  backgroundColor: '#DCEEF2'
   },
   search: {
     display: "flex",
@@ -373,7 +373,7 @@ const ImgMediaCard = function (props) {
           ))
         }        
         renderInput={(params) => (
-          <TextField {...params} variant="outlined" label="Ubicacion" placeholder="Ingrese la ubicacion deseada" />
+          <TextField {...params} variant="outlined" label="Ubicacion" size='small' placeholder="Ingrese la ubicacion deseada" />
         )}
       />
         </Grid>
@@ -386,6 +386,7 @@ const ImgMediaCard = function (props) {
                 inputVariant="outlined"
                 label="Desde"
                 disableFuture
+                size='small'
                 orientation='landscape'
                 format="dd/MM/yyyy"
                 value={selectedDate}
@@ -401,6 +402,7 @@ const ImgMediaCard = function (props) {
               orientation='landscape'
               clearable
               autoOk
+              size='small'
               fullWidth
               variant="inline"
               inputVariant="outlined"
@@ -466,7 +468,7 @@ const ImgMediaCard = function (props) {
             multiline
             rows={2}
             fullWidth
-            label="Ingrese diagnostico"
+            placeholder="Ingrese diagnostico"
             value={diagnosis}
             onChange={handleSetDiagnosis}
           />

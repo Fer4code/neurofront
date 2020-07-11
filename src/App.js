@@ -42,7 +42,7 @@ ReactGA.initialize('UA-171994443-1');
 
 
 class App extends Component {
-
+  
   componentDidMount() {
     const userId = localStorage.getItem('userId')
     console.log(userId)
@@ -61,7 +61,7 @@ class App extends Component {
       <Router history={history}>
         <div className="App">
           {/*<Navbar /> */}
-          <MenuAppBar isAuthenticated={this.props.isAuthenticated}/>
+          <MenuAppBar name={this.props.first_name} last_name={this.props.last_name} role={this.props.role} isAuthenticated={this.props.isAuthenticated}/>
           <Route exact path="/" component={Landing}/>
             <Route exact path="/register" component={Register}/>
             <Route exact path="/registration-completed" component={PostRegister}/>
@@ -99,7 +99,11 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    isAuthenticated: state.auth.user != null
+    isAuthenticated: state.auth.user != null,
+    userId: state.auth.user?.id || null,
+    first_name: state.auth.user?.first_name || "",
+    last_name: state.auth.user?.last_name || "",
+    role: state.auth.user?.role || ""
   }
 }
 

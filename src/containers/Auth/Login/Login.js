@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
@@ -8,7 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom'
-
+import Alert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';  
 import logo from '../../../img/MD1.svg'
 import * as actions from '../../../store/actions/index';
 import Footer from '../../Landing/Footer';
@@ -45,6 +47,9 @@ const useStyles = theme => ({
       textAlign: 'center',
       marginBottom: theme.spacing(2),
 
+    },
+    snack:{
+      marginTop: theme.spacing(12)
     }
   });
 
@@ -52,24 +57,49 @@ class Login extends Component {
     state = {
         email: '',
         password: '',
+        open: false,
+        vertical: 'Top',
+        horizontal: 'Center',
+        transition: undefined,
         errors: {}
     }
     onChange = (e) => {
         this.setState({ [e.target.name]: e.target.value })
       }
-    onSubmit = (e) => {
+      onSubmit = (e) => {
         e.preventDefault()
-        this.props.onAuth( this.state.email, this.state.password)
+        if (this.state.email != '') {
+          this.props.onAuth( this.state.email, this.state.password)
+        }
+        
     }
     redir = (e) =>{
-      this.props.history.push('/register')
+       this.props.history.push('/register')
+    }
+    handleClose=(e)=>{
+      this.setState({
+        open:false
+      })
+    }
+    handleClick=(e)=>{
+      this.setState({
+        open:true
+      })
     }
     render() {
         const { classes } = this.props;
+
+       
         let authRedirect = null;
-            if(this.props.isAuthenticated) {
-                authRedirect = <Redirect to={"/profile"} />
-            }
+        if(this.props.isAuthenticated) {
+          console.log("Authenticated")
+          if(this.props.admin) {
+            authRedirect = <Redirect to={"/adprofile"} />
+          } else {
+            authRedirect = <Redirect to={"/profile"} />
+          }
+        }
+
         return (
           <main>
             <Container maxWidth="xs" className={classes.form}>
@@ -102,8 +132,7 @@ class Login extends Component {
                   autoComplete="true"
                   size='small'
                   placeholder="Correo electronico"
-                  error={this.props.error == "Recurso no encontrado" ? this.props.error : null}
-                  helperText={this.props.error == "Recurso no encontrado" ? "Correo incorrecto o no registrado" : null}
+                  
                 />
               </Grid>
               <Grid className={classes.paper} Item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -125,7 +154,7 @@ class Login extends Component {
                   helperText={this.props.error == "Contraseña invalida" ? this.props.error : null}
                 />
               </Grid>
-              <Button className={classes.submit} variant="contained" type="submit" color='inherit' fullWidth >
+              <Button onClick={this.handleClick} className={classes.submit} variant="contained" type="submit" color='inherit' fullWidth >
                 Ingresar
               </Button>
               
@@ -135,6 +164,13 @@ class Login extends Component {
               </Button>
               </Grid>
             </form>
+            {/*<Snackbar
+            className={classes.snack}
+            anchorOrigin={{vertical: 'top', horizontal: 'center' }}
+            open={this.state.open}
+            onClose={this.handleClose}
+            message="I love snacks"
+      />*/}
             {authRedirect}
             
       </Container>
@@ -148,6 +184,7 @@ const mapStateToProps = state => {
         loading: state.auth.loading,
         error: state.auth.error,
         isAuthenticated: state.auth.token !== null,
+        admin: state.auth.user?.id == 1
     };
 };
 

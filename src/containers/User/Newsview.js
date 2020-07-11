@@ -33,7 +33,7 @@ const useStyles = makeStyles({
     minHeight: '80vh' 
   },
   container: {
-    backgroundColor: "grey",
+    backgroundColor: "#DCEEF2",
     borderRadius: '0.5rem',
     padding: 8
   },

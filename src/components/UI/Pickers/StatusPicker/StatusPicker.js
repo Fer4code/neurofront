@@ -26,6 +26,7 @@ const StatusPicker = React.memo((props) => {
             id="idmaritalstatus"
             name="marital_status"
             select
+            required
             fullWidth
             label="Estado civil"
             value={props.marital_status}

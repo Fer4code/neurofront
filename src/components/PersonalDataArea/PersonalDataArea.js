@@ -32,6 +32,7 @@ const PersonalDataArea = React.memo((props) => {
                         fullWidth
                         id="direction"
                         label="Edad"
+                        value={props.edad_paciente}
                         direction={props.direction} 
                         onChange={props.onChangeFnc}
                     />

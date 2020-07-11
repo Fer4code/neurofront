@@ -5,6 +5,8 @@ import { makeStyles, Typography } from '@material-ui/core';
 import MaterialTable from 'material-table';
 import { ReactComponent as Check } from '../icons/check.svg';
 import { ReactComponent as War } from '../icons/warning.svg';
+import BackButton from '../../components/UI/BackButton/BackButton';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -59,6 +61,7 @@ const UserTable = function(props) {
   }
   return (
     <div className={classes.root}>
+      <BackButton/>
       <MaterialTable className={classes.table} 
       title= {<Typography variant='h6' className={classes.title}>Administrador de usuarios</Typography>}
       columns={[

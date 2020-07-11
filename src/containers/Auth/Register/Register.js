@@ -36,7 +36,7 @@ const useStyles = theme => ({
   },
   form: {
     width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2),
   },
   submit: {
     fontSize: theme.typography.pxToRem(20),
@@ -133,7 +133,7 @@ class Register extends Component {
                 <form onSubmit={this.onSubmit} style={useStyles.form}>
                 
                 <Typography variant="h4" color="initial" align="center" className={classes.title}>Crea una cuenta y disfruta de nuestros servicios</Typography>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={1}>
                     <Grid item xl={6} lg={6} md={6} sm={6} xs={12}>
                           <Typography variant="subtitle2" color="initial">Nombres</Typography>
                         <TextField

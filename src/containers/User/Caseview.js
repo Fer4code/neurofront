@@ -16,7 +16,8 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Container from '@material-ui/core/Container';
 import Chip from '@material-ui/core/Chip';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import BackButton from '../../components/UI/BackButton/BackButton';
+
 
 
 const useStyles = makeStyles  ((theme) => ({
@@ -27,7 +28,7 @@ const useStyles = makeStyles  ((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
-    background: 'grey',
+    background: '#DFE9F2',
     borderRadius: "0.5rem",
     padding: theme.spacing(2),
   },
@@ -56,7 +57,7 @@ const getData = (array) => {
   return array.join()
 }
 
-const Caseview =  function(props) {
+const ImgMediaCard =  function(props) {
   const classes = useStyles();
   const { id } = useParams()
   const [clinical_story, setClinicalStory] = useState(null)
@@ -79,6 +80,7 @@ const Caseview =  function(props) {
 
   return (
     <Grid container>
+      <BackButton/>
       <Grid item sm={12}>
       <Container component="main" className={classes.container}>
         <CssBaseline/>
@@ -112,7 +114,7 @@ const Caseview =  function(props) {
               component="img"
               alt="Contemplative Reptile"
               height="223"
-              image="/static/images/cards/contemplative-reptile.jpg"
+              image={require("../../img/braidn.svg")}
               title="Contemplative Reptile"
             />
             </CardActionArea>
@@ -452,4 +454,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Caseview)
+export default connect(mapStateToProps, mapDispatchToProps)(ImgMediaCard)

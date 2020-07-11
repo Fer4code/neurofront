@@ -12,21 +12,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import TabPanel from '../TabPanel/TabPanel';
 import PersonalBackgroundPicker from '../UI/Pickers/PersonalBackgroundPicker/PersonalBackgroundPicker'
 import FamilyBackgroundPicker from '../UI/Pickers/FamilyBackgroundPicker/FamilyBackgroundPicker'
-import AllergyPicker from '../UI/Pickers/AllergyPicker/AllergyPicker'
 import VaccinePicker from '../UI/Pickers/VaccinePicker/VaccinePicker'
-
-
-const top100Films = [
-  { title: '2001: A Space Odyssey', year: 1968 },
-  { title: "Singin' in the Rain", year: 1952 },
-  { title: 'Toy Story', year: 1995 },
-  { title: 'Bicycle Thieves', year: 1948 },
-  { title: 'The Kid', year: 1921 },
-  { title: 'Inglourious Basterds', year: 2009 },
-  { title: 'Snatch', year: 2000 },
-  { title: '3 Idiots', year: 2009 },
-  { title: 'Monty Python and the Holy Grail', year: 1975 },
-];
 
 const DetailsArea = React.memo((props) => {
     const theme = useTheme()
@@ -43,6 +29,7 @@ const DetailsArea = React.memo((props) => {
           'aria-controls': `full-width-tabpanel-${index}`,
         };
       }
+
     return(
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <AppBar position="static" color="default" >
@@ -60,7 +47,7 @@ const DetailsArea = React.memo((props) => {
                     <Tab label="Ant. personales" {...a11yProps(2)} />
                     <Tab label="Ant. familiares" {...a11yProps(3)} />
                     <Tab label="Vacunas" {...a11yProps(4)} />
-                    <Tab label="Resumen" {...a11yProps(5)} />
+                    <Tab label="Examen fisico" {...a11yProps(5)} />
                 </Tabs>
             </AppBar>
             <SwipeableViews
@@ -90,11 +77,13 @@ const DetailsArea = React.memo((props) => {
                           multiple
                           id="tags-filled"
                           variant='outlined'
-                          options={top100Films.map((option) => option.title)}
+                          options={props.symptomsList}
+                          getOptionLabel={(option) => option.name}
+                          onChange={(event, value) => props.onChangeFnc({target: {name: "symptoms", value}})}
                           freeSolo
                           renderTags={(value, getTagProps) =>
                             value.map((option, index) => (
-                              <Chip color='primary' label={option} {...getTagProps({ index })} />
+                              <Chip color='primary' label={option.name} {...getTagProps({ index })} />
                             ))
                           }        
                           renderInput={(params) => (
@@ -105,103 +94,187 @@ const DetailsArea = React.memo((props) => {
             </TabPanel>
             <TabPanel value={tab1value} index={2} dir={theme.direction}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Grid container spacing={2}>
-              <Grid item xl={8} lg={8} md={8} sm={8} xs={8}>
-                      <PersonalBackgroundPicker 
-                        value={props.personal_background}
-                        valuesList={props.personalBackgroundList}
-                        onChangeFnc={props.onChangeFnc}
-                      />
-                      </Grid>
-                      <Grid item xl={4} lg={4} md={4} sm={4} xs={4}>
-                      <Autocomplete
+                    <Autocomplete
                           multiple
                           id="tags-filled"
                           variant='outlined'
-                          options={top100Films.map((option) => option.title)}
+                          options={props.backgroundList}
+                          getOptionLabel={(option) => option.name}
+                          onChange={(event, value) => props.onChangeFnc({target: {name: "personal_backgrounds", value}})}
                           freeSolo
                           renderTags={(value, getTagProps) =>
                             value.map((option, index) => (
-                              <Chip color='primary' label={option} {...getTagProps({ index })} />
+                              <Chip color='primary' label={option.name} {...getTagProps({ index })} />
                             ))
-                          }        
+                          }                
                           renderInput={(params) => (
-                            <TextField {...params} variant="outlined" placeholder="Medicamentos" />
+                            <TextField {...params} variant="outlined" placeholder="Antecedentes" />
                           )}
                         />
-                        </Grid>
-                    </Grid>
                     </Grid>
             </TabPanel>
             <TabPanel value={tab1value} index={3} dir={theme.direction}>
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <FamilyBackgroundPicker
-                        value={props.family_background}
-                        valuesList={props.familyBackgroundList}
-                        onChangeFnc={props.onChangeFnc}
-                      />
-                    </Grid>
+            <Autocomplete
+                          multiple
+                          id="tags-filled"
+                          variant='outlined'
+                          options={props.familyBackgroundList}
+                          getOptionLabel={(option) => `${option.name} (${option.member})`}
+                          onChange={(event, value) => props.onChangeFnc({target: {name: "family_backgrounds", value}})}
+                          freeSolo
+                          renderTags={(value, getTagProps) =>
+                            value.map((option, index) => (
+                              <Chip color='primary' label={option.name} {...getTagProps({ index })} />
+                            ))
+                          }             
+                          renderInput={(params) => (
+                            <TextField {...params} variant="outlined" placeholder="Antecedentes familiares" />
+                          )}
+                        />
             </TabPanel>
             <TabPanel value={tab1value} index={4} dir={theme.direction}>
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <VaccinePicker
-                        value={props.vaccine}
-                        valuesList={props.vaccineList}
-                        onChangeFnc={props.onChangeFnc}
-                      />
-                    </Grid>
+                <Autocomplete
+                          multiple
+                          id="tags-filled"
+                          variant='outlined'
+                          getOptionLabel={(option) => option.name}
+                          options={props.vaccineList}
+                          onChange={(event, value) => props.onChangeFnc({target: {name: "vaccines", value}})}
+                          freeSolo
+                          renderTags={(value, getTagProps) =>
+                            value.map((option, index) => (
+                              <Chip color='primary' label={option.name} {...getTagProps({ index })} />
+                            ))
+                          }             
+                          renderInput={(params) => (
+                            <TextField {...params} variant="outlined" placeholder="Vacunas" />
+                          )}
+                        />
+                  </Grid>
             </TabPanel>
             <TabPanel value={tab1value} index={5} dir={theme.direction}>
-            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Grid container spacing={2}>
-              <Grid item xl={8} lg={8} md={8} sm={8} xs={8}>
-              <Autocomplete
-                          multiple
-                          id="tags-filled"
-                          variant='outlined'
-                          options={top100Films.map((option) => option.title)}
-                          freeSolo
-                          renderTags={(value, getTagProps) =>
-                            value.map((option, index) => (
-                              <Chip color='primary' label={option} {...getTagProps({ index })} />
-                            ))
-                          }        
-                          renderInput={(params) => (
-                            <TextField {...params} variant="outlined" placeholder="Datos" />
-                          )}
+            
+                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <Grid container spacing={1}>
+                  <Grid item lg={8}>
+                    <TextField
+                          autoComplete=""
+                          name="fisical_exam"
+                          variant="outlined"
+                          required
+                          multiline
+                          rows={8}
+                          fullWidth
+                          rowsMax="10"
+                          id="fisical_exam"
+                          label="Examen Fisico"
+                          value={props.fisical_exam}
+                          onChange={props.onChangeFnc}
                         />
-                      </Grid>
-                      <Grid item xl={4} lg={4} md={4} sm={4} xs={4}>
-                      <Autocomplete
-                          multiple
-                          id="tags-filled"
-                          variant='outlined'
-                          options={top100Films.map((option) => option.title)}
-                          freeSolo
-                          renderTags={(value, getTagProps) =>
-                            value.map((option, index) => (
-                              <Chip color='primary' label={option} {...getTagProps({ index })} />
-                            ))
-                          }        
-                          renderInput={(params) => (
-                            <TextField {...params} variant="outlined" placeholder="Diagnostico" />
-                          )}
-                        />
-                        </Grid>
-                        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                        <TextField
-                        name="description"
-                        variant="outlined"
-                        multiline
-                        fullWidth
-                        rowsMax="4"
-                        id="motivo_consulta"
-                        label="Observaciones"
-                        value={props.description}
-                        onChange={props.onChangeFnc}
-                      />
-                        </Grid>
+                  </Grid>
+                  <Grid item lg={2}>
+                    <Grid container direction="column" spacing={1}>
+                    <Grid item lg={12}>
+                              <TextField
+                              name="diastolic"
+                              variant="outlined"
+                              type="number"
+                              fullWidth
+                              size='small'
+                              id="diastolica"
+                              label="Presion Diastolica"
+                              value={props.diastolic}
+                              onChange={props.onChangeFnc}
+                            />
+                          </Grid>
+                          <Grid item lg={12}>
+                              <TextField
+                              name="sistolic"
+                              variant="outlined"
+                              type="number"
+                              fullWidth
+                              size='small'
+                              id="diastolica"
+                              label="Presion Sistolica"
+                              value={props.sistolic}
+                              onChange={props.onChangeFnc}
+                            />
+                          </Grid>
+                          <Grid item lg={12}>
+                              <TextField
+                              name="pulse"
+                              variant="outlined"
+                              type="number"
+                              fullWidth
+                              size='small'
+                              id="diastolica"
+                              label="Frecuencia cardiaca"
+                              value={props.pulse}
+                              onChange={props.onChangeFnc}
+                            />
+                          </Grid>
+                          <Grid item lg={12}>
+                              <TextField
+                              name="frec_resp"
+                              variant="outlined"
+                              type="number"
+                              fullWidth
+                              size='small'
+                              id="diastolica"
+                              label="Frecuencia respiratoria"
+                              value={props.frec_resp}
+                              onChange={props.onChangeFnc}
+                            />
+                          </Grid>
                     </Grid>
+                    
+                  </Grid>
+                  <Grid item lg={2}>
+                    <Grid container direction="column" spacing={1}>
+                          <Grid item lg={12}>
+                              <TextField
+                              name="temp"
+                              variant="outlined"
+                              type="number"
+                              fullWidth
+                              size='small'
+                              id="diastolica"
+                              label="Temperatura (C°)"
+                              value={props.temp}
+                              onChange={props.onChangeFnc}
+                            />
+                          </Grid>
+                          <Grid item lg={12}>
+                              <TextField
+                              name="height"
+                              variant="outlined"
+                              type="number"
+                              fullWidth
+                              size='small'
+                              id="diastolica"
+                              label="Estatura (cm)"
+                              value={props.height}
+                              onChange={props.onChangeFnc}
+                            />
+                          </Grid>
+                          <Grid item lg={12}>
+                              <TextField
+                              name="weight"
+                              variant="outlined"
+                              type="number"
+                              fullWidth
+                              size='small'
+                              id="diastolica"
+                              label="Peso (Kg)"
+                              value={props.weight}
+                              onChange={props.onChangeFnc}
+                            />
+                          </Grid>
+                    </Grid>
+                    
+                  </Grid>
+                </Grid>
                     </Grid>
             </TabPanel>
           </SwipeableViews>

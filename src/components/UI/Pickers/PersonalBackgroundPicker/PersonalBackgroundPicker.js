@@ -16,7 +16,7 @@ const PersonalBackgroundPicker = React.memo((props) => {
               value={props.state}
               onChange={props.onChangeFnc}        
               variant="outlined"
-              disabled={!props.valuesList.length > 0}
+              disabiled={!props.valuesList.length > 0}
         >
               {valuesList.map((option) => (
             <MenuItem key={option.id} value={option.id}>

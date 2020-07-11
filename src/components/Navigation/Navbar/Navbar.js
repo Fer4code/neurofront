@@ -186,7 +186,7 @@ export default function Navbar(props) {
       onClose={handleMobileMenuClose}
     >
       <List>
-      <NavigationItems style='subtitlem'/>
+      <NavigationItems style='subtitlem' isAuthenticated={props.isAuthenticated} admin={props.admin}/>
       </List>  
         
     </Menu>
@@ -227,8 +227,8 @@ export default function Navbar(props) {
           <ListItem>
           <ListItemIcon><Avatar alt="User Sharp" src="/static/images/avatar/1.jpg" className={classes.large} /></ListItemIcon>
           <ListItemText
-          primary='Nombre Apellido'
-          secondary='Usuario'
+         primary={props.name + " " + props.last_name}
+         secondary={props.role}
           />
           </ListItem>
           </List>
@@ -241,11 +241,11 @@ export default function Navbar(props) {
     </ListItemIcon>
     <ListItemText primary='Nuevo Paciente'/>
 </ListItem>
-<ListItem button >
+<ListItem button onClick={()=>history.push('/patientsview')}>
     <ListItemIcon>
         <NoteAddIcon />
     </ListItemIcon>
-    <ListItemText primary='Historias'/>
+    <ListItemText primary='Pacientes'/>
 </ListItem>
 <ListItem button onClick={()=>history.push('/investigation')}>
     <ListItemIcon>
@@ -253,7 +253,7 @@ export default function Navbar(props) {
     </ListItemIcon>
     <ListItemText primary='Investigación'/>
 </ListItem>
-<ListItem button >
+<ListItem button onClick={()=>history.push('/medsview')}>
     <ListItemIcon>
         <DonutLargeIcon/>
     </ListItemIcon>
@@ -280,13 +280,13 @@ export default function Navbar(props) {
 </List>
 <Divider/>
 <List>
-<ListItem button >
+{/*<ListItem button >
     <ListItemIcon>
         <SettingsIcon/>
     </ListItemIcon>
     <ListItemText primary='Configuración'/>
-</ListItem>
-      <ListItem button >
+</ListItem>*/}
+      <ListItem button onClick={()=>history.push('/logout')}>
           <ListItemIcon>
               <PowerSettingsNewIcon/>
           </ListItemIcon>
@@ -326,8 +326,8 @@ export default function Navbar(props) {
           <ListItem>
           <ListItemIcon><Avatar alt="Admin Sharp" src="/static/images/avatar/1.jpg" className={classes.large} /></ListItemIcon>
           <ListItemText
-          primary='Nombre Apellido'
-          secondary='Administrador'
+          primary={props.name + " " + props.last_name}
+          secondary={props.role}
           />
           </ListItem>
           </List>
@@ -366,13 +366,13 @@ export default function Navbar(props) {
           </List>
           <Divider/>
           <List>
-          <ListItem button >
+          {/*<ListItem button >
           <ListItemIcon>
               <SettingsIcon/>
           </ListItemIcon>
           <ListItemText primary='Configuración'/>
-          </ListItem>
-              <ListItem button >
+          </ListItem>*/}
+              <ListItem button onClick={()=>history.push('/logout')} >
                   <ListItemIcon>
                       <PowerSettingsNewIcon/>
                   </ListItemIcon>
@@ -398,7 +398,7 @@ export default function Navbar(props) {
         <Toolbar>
           <img src={logo} className={classes.imagen} onClick={event => window.location.href='/'} alt='logo'/>
           <Grid container alignItems="flex-start" justify="flex-end" direction="row" className={classes.items} >
-            <NavigationItems stylew='subtitle'/>
+            <NavigationItems stylew='subtitle' isAuthenticated={props.isAuthenticated} admin={props.admin}/>
           </Grid>
           <div className={classes.sectionMobile}>
 
@@ -413,7 +413,7 @@ export default function Navbar(props) {
       </AppBar>
       </ElevationScroll>
       {renderMobileMenu}
-      {/*{user ? userDrawer : adminDrawer}*/}
+
       <div className={classes.toolbar} />
     </div>
     </React.Fragment>

@@ -11,7 +11,7 @@ import * as actions from '../../store/actions/index';
 import NamesInputArea from '../../components/NamesInputArea/NamesInputArea'
 import PersonalDataArea from '../../components/PersonalDataArea/PersonalDataArea'
 import DetailsArea from '../../components/DetailsArea/DetailsArea'
-import ExaminationArea from '../../components/ExaminationArea/ExaminationArea'
+import ResultsArea from '../../components/ResultsArea/ResultsArea'
 
 
 
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 const PacientForm = (props) => {
     React.useEffect(() => {
         if(props.countryData.length == 0) {
-          props.onInitFormData();
+          props.onInitFormData(true);
         }
     })
     const [names, setNames] = React.useState({
@@ -59,12 +59,14 @@ const PacientForm = (props) => {
       second_last_name: '',
     })
     const [personalData, setPersonalData] = React.useState({
-      birth_date: Date.now(),
+      birth_date: new Date(),
+      edad_paciente: 0,
       gender: '',
       blood_type: '',
       marital_status: '',
       documentType: 'V-',
       document: '',
+      profession: '',
       telephone: '',
       telephone2: '',
       direction: '',
@@ -74,17 +76,25 @@ const PacientForm = (props) => {
     })
     const [detailsData, setDetailsData] = React.useState({
       description: '',
-      personal_background: '',
-      family_background: '',
-      allergy: '',
-      vaccine: '',
-    })
-    const [examinationData, setExaminationData] = React.useState({
-      observations: '',
-      medicine: '',
+      symptoms: [],
+      personal_backgrounds: [],
+      family_backgrounds: [],
+      vaccines: [],
+      symptoms: [],
       fisical_exam: '',
-      cognitions: '',
-      surgeries: ''
+      diastolic: '',
+      sistolic: '',
+      pulse: '',
+      frec_resp: '',
+      temp: '',
+      height: '',
+      weight: ''
+    })
+    const [resultsData, setResultsData] = React.useState({
+      observations: '',
+      diagnosis: '',
+      metadata: [],
+      relevantMetadata: []
     })
     const handleNamesData = event => {
       setNames({
@@ -116,9 +126,14 @@ const PacientForm = (props) => {
           })
         }
       } else {
+        var diff_ms = Date.now() - event.getTime();
+        var age_dt = new Date(diff_ms); 
+  
+        const age = Math.abs(age_dt.getUTCFullYear() - 1970)
         setPersonalData({
           ...personalData,
-          "birth_date": event
+          "birth_date": event,
+          edad_paciente: age
         })
       }
     }
@@ -129,10 +144,19 @@ const PacientForm = (props) => {
       })
     }
     const handleExaminationData = event => {
-      setExaminationData({
-        ...examinationData,
-        [event.target.name]: event.target.value
-      })
+      if (event.target.name == "metadata") {
+        const array = resultsData.relevantMetadata.filter((option) => event.target.value.includes(option))
+        setResultsData({
+          ...resultsData,
+          [event.target.name]: event.target.value,
+          relevantMetadata: array
+        })  
+      } else {
+        setResultsData({
+          ...resultsData,
+          [event.target.name]: event.target.value
+        }) 
+      }
     }
     const handlePrefixedInput = name => event => {
       setPersonalData({
@@ -144,16 +168,78 @@ const PacientForm = (props) => {
       event.preventDefault()
       
       const formData = {
+        user_id: props.user_id,
         ...names,
         ...personalData,
         ...detailsData,
-        ...examinationData
+        ...resultsData
       }
       props.saveClinicalStory(formData, props.token)
     }
     const classes = useStyles()
+
+    const familyMembers = ["Madre", "Padre", "Abuela materna", "Abuela paterna", "Abuelo materno", "Abuelo paterno"]
+    let familyBackgroundList = []
+    props.backgroundData.forEach((background) => {
+      familyMembers.forEach((member) => {
+        familyBackgroundList.push({...background, member})
+      })
+    })
+    if (props.saved) {
+      setNames({
+        first_name: '',
+        second_name: '',
+        last_name: '',
+        second_last_name: '',
+      })
+      setPersonalData({
+        birth_date: new Date(),
+        edad_paciente: 0,
+        gender: '',
+        blood_type: '',
+        marital_status: '',
+        documentType: 'V-',
+        document: '',
+        profession: '',
+        telephone: '',
+        telephone2: '',
+        direction: '',
+        country: '',
+        state: '',
+        municipality: '',
+      })
+      setDetailsData({
+        description: '',
+        symptoms: [],
+        personal_backgrounds: [],
+        family_backgrounds: [],
+        vaccines: [],
+        symptoms: [],
+        fisical_exam: '',
+        diastolic: '',
+        sistolic: '',
+        pulse: '',
+        frec_resp: '',
+        temp: '',
+        height: '',
+        weight: ''
+      })
+      setResultsData({
+        observations: '',
+        diagnosis: '',
+        metadata: [],
+        relevantMetadata: []
+      })
+    }
+    
+    const timer = true
+    if(timer && props.completed) {
+      setTimeout(() => timer = false, 2000)
+    }
+
     return (
       <Grid container>
+        { props.completed && timer ? alert("Historia registrada") : null}
       <Grid item sm={12}>
             <Container component="main" className={classes.paper}>
               <CssBaseline />
@@ -168,9 +254,11 @@ const PacientForm = (props) => {
                       last_name={names.last_name}
                       second_last_name={names.second_last_name}
                       onChangeFnc={handleNamesData}
+                      errors={props.errors}
                     />
                     <PersonalDataArea 
                       birth_date={personalData.birth_date}
+                      edad_paciente={personalData.edad_paciente}
                       gender={personalData.gender}
                       blood_type={personalData.blood_type}
                       marital_status={personalData.marital_status}
@@ -187,28 +275,38 @@ const PacientForm = (props) => {
                       municipalitiesList={props.municipalityData}
                       onChangeFnc={handlePersonalData}
                       onChangePrefixed={handlePrefixedInput}
+                      errors={props.errors}
                     />
                     <Typography variant="h6" color="initial">Detalles</Typography>
                     <DetailsArea 
                       description={detailsData.description}
-                      personal_background={detailsData.personal_background}
-                      personalBackgroundList={props.personalBackgroundData}
-                      family_background={detailsData.family_background}
-                      familyBackgroundList={props.familyBackgroundData}
-                      allergy={detailsData.allergy}
-                      allergyList={props.allergyData}
+                      personal_background={detailsData.personal_backgrounds}
+                      family_background={detailsData.family_backgrounds}
+                      backgroundList={props.backgroundData}
+                      familyBackgroundList={familyBackgroundList}
+                      symptoms={detailsData.symptoms}
+                      symptomsList={props.symptomData}
                       vaccine={detailsData.vaccine}
                       vaccineList={props.vaccineData}
+                      fisical_exam={detailsData.fisical_exam}
+                      sistolic={detailsData.sistolic}
+                      diastolic={detailsData.diastolic}
+                      pulse={detailsData.pulse}
+                      frec_resp={detailsData.frec_resp}
+                      temp={detailsData.temp}
+                      height={detailsData.height}
+                      weight={detailsData.weight}
                       onChangeFnc={handleDetailsData}
+                      errors={props.errors}
                     />
-                    <ExaminationArea
-                      observations={examinationData.observations}
-                      medicine={examinationData.medicine}
-                      medicineList={props.medicineData}
-                      fisical_exam={examinationData.fisical_exam}
-                      cognitions={examinationData.cognitions}
-                      surgeries={examinationData.surgeries}
+                    <ResultsArea
+                      diagnosis={resultsData.diagnosis}
+                      metadata={resultsData.metadata}
+                      relevantMetadata={resultsData.relevantMetadata}
+                      metadataList={props.metadata}
+                      observations={resultsData.observations}
                       onChangeFnc={handleExaminationData}
+                      errors={props.errors}
                     />
                     <Button
                       type="submit"
@@ -216,6 +314,7 @@ const PacientForm = (props) => {
                       variant="contained"
                       color="primary"
                       className={classes.submit}
+                      onClick={handleSubmit}
                     >
                       Registrar Historia
                     </Button>
@@ -228,24 +327,25 @@ const PacientForm = (props) => {
 }
 const mapStateToProps = state => {
   return {
-    countryData: state.formData.countries,
-    stateData: state.formData.states,
-    municipalityData: state.formData.municipalities,
-    personalBackgroundData: state.formData.personalBackgrounds,
-    familyBackgroundData: state.formData.familyBackgrounds,
-    allergyData: state.formData.allergies,
-    vaccineData: state.formData.vaccines,
-    medicineData: state.formData.medicines,
-    token: state.auth.token
+    countryData: state.formData.countries || [],
+    stateData: state.formData.states || [],
+    municipalityData: state.formData.municipalities || [],
+    backgroundData: state.formData.backgrounds || [],
+    vaccineData: state.formData.vaccines || [],
+    medicineData: state.formData.medicines || [],
+    symptomData: state.formData.symptoms || [],
+    metadata: state.formData.metadata || [], 
+    token: state.auth.token,
+    errors: state.clinicalStory.errors,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onInitFormData: () => dispatch(actions.initFormData()),
+    onInitFormData: (restrain) => dispatch(actions.initFormData(restrain)),
     fetchStates: (country_id) => dispatch(actions.fetchStates(country_id)),
     fetchMunicipalities: (state_id) => dispatch(actions.fetchMunicipalities(state_id)),
-    saveClinicalStory: (clinicalStoryData, token) => dispatch(actions.saveClinicalStory(clinicalStoryData, token))
+    saveClinicalStory: (clinicalStoryData, token) => dispatch(actions.saveClinicalStory(clinicalStoryData, token)),
   }
 }
 

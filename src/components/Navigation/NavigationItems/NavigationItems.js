@@ -5,11 +5,17 @@ import NavigationItem from './NavigationItem/NavigationItem';
 const navigationItems = (props) => (
     <React.Fragment>
         <NavigationItem link={"/"} stylew={props.stylew}>Inicio</NavigationItem>
-        <NavigationItem link={"/register"} stylew={props.stylew}>Crea una cuenta</NavigationItem>
-        <NavigationItem link={"/login"} stylew={props.stylew}>Ingresa a tu cuenta</NavigationItem>
-        <NavigationItem link={"/profile"} stylew={props.stylew}>Profile</NavigationItem>
-        <NavigationItem link={"/Adprofile"} stylew={props.stylew}>Adprofile</NavigationItem>
-        <NavigationItem link={"/test"} stylew={props.stylew}>TEST</NavigationItem>
+        
+        { props.isAuthenticated && props.admin ? <NavigationItem link={"/Adprofile"} style={props.stylew}>Perfil Administrador</NavigationItem> : null }
+        
+        { props.isAuthenticated && !props.admin ? <NavigationItem link={"/profile"} stylew={props.stylew}>Menú</NavigationItem>: null}
+        
+        { !props.isAuthenticated ? <NavigationItem link={"/register"} stylew={props.stylew}>Crea una cuenta</NavigationItem> : null}
+        
+        { !props.isAuthenticated ? <NavigationItem link={"/login"} stylew={props.stylew}>Ingresa a tu cuenta</NavigationItem> : null}
+        
+        { props.isAuthenticated ? <NavigationItem link={"/logout"} stylew={props.stylew}>Salir</NavigationItem>: null}
+
     </React.Fragment>
 )
 
