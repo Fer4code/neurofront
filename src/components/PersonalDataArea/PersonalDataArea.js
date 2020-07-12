@@ -73,10 +73,9 @@ const PersonalDataArea = React.memo((props) => {
                 <Grid item xl={3} lg={3} md={3} sm={6} xs={12}>
                     <TextField className="cidnumber"
                     id="document"
-                    name={props.documentType}
                     required
                     fullWidth
-                    label="Profesion"
+                    label="Profesión u Ocupación"
                     type="input"
                     variant='outlined'
                     

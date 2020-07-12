@@ -1,6 +1,6 @@
 import Test from './components/Navigation/Navbar/Test'
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, } from 'react-router-dom'
+import { Router, Route, } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { Container, CssBaseline, ThemeProvider, Drawer } from '@material-ui/core'
 import ReactGA from 'react-ga'
@@ -53,6 +53,7 @@ class App extends Component {
     }
 
   }
+  
   render() {
     return (
       <ThemeProvider theme={light}>

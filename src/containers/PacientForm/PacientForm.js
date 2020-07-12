@@ -12,7 +12,14 @@ import NamesInputArea from '../../components/NamesInputArea/NamesInputArea'
 import PersonalDataArea from '../../components/PersonalDataArea/PersonalDataArea'
 import DetailsArea from '../../components/DetailsArea/DetailsArea'
 import ResultsArea from '../../components/ResultsArea/ResultsArea'
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
+import BackButton from '../../components/UI/BackButton/BackButton';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -236,10 +243,43 @@ const PacientForm = (props) => {
     if(timer && props.completed) {
       setTimeout(() => timer = false, 2000)
     }
-
+    const handleLogin = () => {
+      this.props.history.push("/login");
+    };
+    const handleInicio = () => {
+      this.props.history.push("/");
+    };
+    let dialogOpen = true
+    if(props.saveClinicalStory) {
+     dialogOpen = false
+    }
     return (
       <Grid container>
+        <BackButton/>
         { props.completed && timer ? alert("Historia registrada") : null}
+        <Dialog
+        open={dialogOpen}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Te has registrado exitosamente
+          <CheckCircleIcon fontSize='large' className={classes.icon}/>
+          </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            ¿Qué prefieres hacer?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleInicio} color="primary">
+            Volver al inicio
+          </Button>
+          <Button onClick={handleLogin} color="primary" autoFocus>
+            Iniciar Sesión
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Grid item sm={12}>
             <Container component="main" className={classes.paper}>
               <CssBaseline />
@@ -319,6 +359,7 @@ const PacientForm = (props) => {
                       Registrar Historia
                     </Button>
                 </form>
+                {dialogOpen}
             </Container>
             </Grid>
             </Grid>

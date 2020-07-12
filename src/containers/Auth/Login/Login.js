@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
@@ -7,13 +7,8 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom'
-import Alert from '@material-ui/lab/Alert';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';  
 import logo from '../../../img/MD1.svg'
 import * as actions from '../../../store/actions/index';
-import Footer from '../../Landing/Footer';
 
 const useStyles = theme => ({
     paper: {
@@ -117,7 +112,7 @@ class Login extends Component {
               </Grid>
               <h2 className={classes.title}>Ingresa a tu cuenta</h2>
               <Grid container spacing={2} >
-              <Grid Item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Typography variant="subtitle2" color="initial">Correo electronico</Typography>
                 <TextField
                   id="first"
@@ -135,7 +130,7 @@ class Login extends Component {
                   
                 />
               </Grid>
-              <Grid className={classes.paper} Item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid className={classes.paper} xl={12} lg={12} md={12} sm={12} xs={12}>
               <Typography variant="subtitle2" color="initial">Contraseña</Typography>
                 <TextField
                   id="password"

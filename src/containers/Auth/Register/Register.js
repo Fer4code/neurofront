@@ -6,19 +6,20 @@ import Button from '@material-ui/core/Button'
 import { withStyles } from '@material-ui/core/styles';
 import logo from '../../../img/MD1.svg'
 import Typography from '@material-ui/core/Typography'
-import{ Chip, CssBaseline }from '@material-ui/core';
+import{ Chip, CssBaseline, ClickAwayListener }from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
 import Alert from '@material-ui/lab/Alert';
-import GenderPicker from '../../../components/UI/Pickers/GenderPicker/GenderPicker'
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 
 import * as actions from '../../../store/actions/index';
-import transitions from '@material-ui/core/styles/transitions'
 
 const useStyles = theme => ({
   paper: {
@@ -58,6 +59,11 @@ const useStyles = theme => ({
   title: {
     alignText: 'center',
     margin: theme.spacing(4, 0 ,2)
+  }, 
+  icon: {
+    color: 'green',
+    marginLeft: 8,
+    marginTop: 4
   }
 });
 class Register extends Component {
@@ -94,29 +100,48 @@ class Register extends Component {
           This is a success alert — check it out!
         </Alert>
         }
-
-        let authRedirect = null
+        
+        let dialogOpen = false
         if(this.props.registrationCompleted) {
-          authRedirect = <Redirect to={"/login"} />
+         dialogOpen = true
         }
-       
-
-        const handleClose = () => {
-          this.setState({ generoOpen: false})
+     
+        const handleLogin = () => {
+          this.props.history.push("/login");
         };
-
-        const handleOpen = () => {
-          this.setState({ generoOpen: true})
+        const handleInicio = () => {
+          this.props.history.push("/");
         };
-        const handleCloseRole = () => {
-          this.setState({ roleOpen: false})
-        };
-
-        const handleOpenRole = () => {
-          this.setState({ roleOpen: true})
-        };
+        const onFocusLoss = () => {
+          this.setState({dialogOpen: false})
+        }
         return (
               <Container component="main" maxWidth="sm" className={classes.paper}>
+                <ClickAwayListener onClickAway={onFocusLoss}>
+                <Dialog
+        open={dialogOpen}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Te has registrado exitosamente
+          <CheckCircleIcon fontSize='large' className={classes.icon}/>
+          </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            ¿Qué prefieres hacer?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleInicio} color="primary">
+            Volver al inicio
+          </Button>
+          <Button onClick={handleLogin} color="primary" autoFocus>
+            Iniciar Sesión
+          </Button>
+        </DialogActions>
+      </Dialog>
+      </ClickAwayListener>
              <CssBaseline />     
              <Grid
                   container
@@ -280,7 +305,7 @@ class Register extends Component {
                                 size="small"
                                 placeholder="Usuario"
                                 error={Boolean(this.props.errors?.username)}
-                                helperText={this.props.errors?.username ? 'Usuario no disponible, intente otro' : null}
+                                helperText={this.props.errors?.username ? 'Usuario no disponible, intente con otro usuario' : null}
                                 />
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -348,7 +373,7 @@ class Register extends Component {
                       Crear cuenta
                     </Button>
                 </form>
-              {authRedirect}
+              {dialogOpen}
             </Container>
         )
     }
