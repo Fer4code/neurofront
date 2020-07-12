@@ -7,7 +7,8 @@ export {
 } from './auth';
 
 export {
-    register
+    register,
+    registrationEnded
 } from './user';
 
 export {

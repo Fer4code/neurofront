@@ -39,4 +39,10 @@ export const register = (user) => {
             })
     }
 }
+
+export const registrationEnded = () => {
+    return dispatch => {
+        dispatch({ type: actionTypes.REGISTRATION_ENDED })
+    }
+}
   

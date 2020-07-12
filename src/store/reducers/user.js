@@ -26,11 +26,18 @@ const registerFail = (state, action) => {
     });
 };
 
+const registrationEnded = (state, action) => {
+    return updateObject( state, {
+        registrationCompleted: false
+    })
+}
+
 const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
         case actionTypes.REGISTER_START: return registerStart(state, action);
         case actionTypes.REGISTER_SUCCESS: return registerSuccess(state, action);
         case actionTypes.REGISTER_FAIL: return registerFail(state, action);
+        case actionTypes.REGISTRATION_ENDED: return registrationEnded(state, action);
         default:
             return state;
     }

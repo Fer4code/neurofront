@@ -107,9 +107,11 @@ class Register extends Component {
         }
      
         const handleLogin = () => {
+          this.props.registrationEnded()
           this.props.history.push("/login");
         };
         const handleInicio = () => {
+          this.props.registrationEnded()
           this.props.history.push("/");
         };
         const onFocusLoss = () => {
@@ -236,7 +238,7 @@ class Register extends Component {
                                 fullWidth
                                 variant="outlined"
                                 required
-                                inputProps={{ type: 'number', pattern: '[0-9]*'}}
+                                inputProps={{ type: 'number', pattern: '[0-9]*', max: 99999999}}
                                 autoComplete="true"
                                 autoCapitalize="true"
                                 size="small"
@@ -393,7 +395,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onRegister: (user) => dispatch(actions.register(user))
+    onRegister: (user) => dispatch(actions.register(user)),
+    registrationEnded: () => dispatch(actions.registrationEnded())
   }
 }
 export default connect( mapStateToProps, mapDispatchToProps )(withStyles(useStyles)(Register));
